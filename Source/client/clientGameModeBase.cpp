@@ -6,7 +6,6 @@
 AclientGameModeBase::AclientGameModeBase()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::AclientGameModeBase") );
-    
     PrimaryActorTick.bCanEverTick = true;
 }
 AclientGameModeBase::~AclientGameModeBase()

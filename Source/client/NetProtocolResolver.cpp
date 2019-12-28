@@ -3,6 +3,7 @@
 
 #include "NetProtocolResolver.h"
 #include <string>
+#include "GameMsg.h"
 using std::string;
 
 NetProtocolResolver::NetProtocolResolver(TSharedPtr<NetworkConnector> &connector)
@@ -16,8 +17,8 @@ NetProtocolResolver::~NetProtocolResolver()
 
 void NetProtocolResolver::ResolveMessage()
 {
-    string data;
-    if(!mConnector->ReadData(data)||data.size()==0)
+    string _szInput;
+    if(!mConnector->ReadData(_szInput)||_szInput.size()==0)
     {
         return;
     }
@@ -27,17 +28,18 @@ void NetProtocolResolver::ResolveMessage()
     while (mLastBuf.size() >= 8)
     {
         // 0x01 0x02 0x03 0x04    ->   0x04030201
-        int len =
-            mLastBuf[0] |
-            mLastBuf[1] << 8 |
-            mLastBuf[2] << 16 |
-            mLastBuf[3] << 24;
-        int msgType =
-            mLastBuf[4] |
-            mLastBuf[5] << 8 |
-            mLastBuf[6] << 16 |
-            mLastBuf[7] << 24;
-        cout << "len:" << len << " msgType:" << msgType << endl;
+        uint32 len =
+            (uint8)mLastBuf[0] |
+            (uint8)mLastBuf[1] << 8 |
+            (uint8)mLastBuf[2] << 16 |
+            (uint8)mLastBuf[3] << 24;
+        uint32 msgType =
+            (uint8)mLastBuf[4] |
+            (uint8)mLastBuf[5] << 8 |
+            (uint8)mLastBuf[6] << 16 |
+            (uint8)mLastBuf[7] << 24;
+        //cout << "len:" << len << " msgType:" << msgType << endl;
+        UE_LOG(LogTemp, Display, TEXT("process message , len %u , type : %u\n"),len,msgType);
         //判断消息内容长度够不够  01000000010000000102000000020000000202
         if (mLastBuf.size() - 8 >= len)
         {
@@ -47,19 +49,19 @@ void NetProtocolResolver::ResolveMessage()
             mLastBuf.erase(0, 8 + len);
     
             //产生一个SingletTLV
-            auto msg = new GameSingleTLV((GameSingleTLV::GameMsgType)msgType, msgContent);
-            if(msg->mPbMsg==nullptr)
-            {
-                continue;
-            }
-    
-            if (gameMsg == nullptr)
-            {
-                gameMsg = new GameMsg;
-            }
-            //将singletlv加到GameMsg
-            gameMsg->mMsgList.push_back(msg);
-        }
+            //auto msg = new GameSingleTLV((GameSingleTLV::GameMsgType)msgType, msgContent);
+            //if(msg->mPbMsg==nullptr)
+            //{
+            //    continue;
+            //}
+    //
+            //if (gameMsg == nullptr)
+            //{
+            //    gameMsg = new GameMsg;
+            //}
+            ////将singletlv加到GameMsg
+            //gameMsg->mMsgList.push_back(msg);
+        }//
         else
         {
             //剩下长度不够,就不要继续循环等待下一次数据到来再出来
@@ -67,5 +69,5 @@ void NetProtocolResolver::ResolveMessage()
         }
     }
     //返回值包含多个逻辑消息的列表
-    return gameMsg;
+    //return gameMsg;
 }
