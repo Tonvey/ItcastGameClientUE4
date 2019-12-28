@@ -16,9 +16,10 @@ class CLIENT_API AclientGameModeBase : public AGameModeBase
 public:
     AclientGameModeBase();
     ~AclientGameModeBase();
-    UFUNCTION(BlueprintCallable, Category = "SBSB")
+    UFUNCTION(BlueprintCallable, Category = "Action")
     virtual void Init();
     //virtual void BeginPlay()override;
+    virtual void Tick(float deltaTime) override;
 private:
     NetworkConnector *mConnector;
 };

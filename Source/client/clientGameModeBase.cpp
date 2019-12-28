@@ -2,10 +2,12 @@
 
 
 #include "clientGameModeBase.h"
+#include "NetworkController.h"
 AclientGameModeBase::AclientGameModeBase()
 {
-    mConnector=new NetworkConnector;
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::AclientGameModeBase") );
+    
+    PrimaryActorTick.bCanEverTick = true;
 }
 AclientGameModeBase::~AclientGameModeBase()
 {
@@ -14,11 +16,13 @@ AclientGameModeBase::~AclientGameModeBase()
     {
         delete mConnector;
     }
+    
 }
 void AclientGameModeBase::Init()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::Init") );
-    mConnector->Init();
+    NetworkController::GetInstance().Init(TEXT("127.0.0.1"),8899);
+    
 }
 //void AclientGameModeBase::BeginPlay()
 //{
@@ -26,3 +30,8 @@ void AclientGameModeBase::Init()
 //    Super::BeginPlay();
 //    Init();
 //}
+void AclientGameModeBase::Tick(float deltaTime)
+{
+    Super::Tick(deltaTime);
+    NetworkController::GetInstance().ProcessNetworkMessage();
+}
