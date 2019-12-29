@@ -27,6 +27,7 @@ NetworkConnector::~NetworkConnector()
 {
     if(mSocket!=nullptr)
     {
+        mSocket->Close();
         delete mSocket;
         mSocket=nullptr;
     }
