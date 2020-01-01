@@ -3,6 +3,7 @@
 
 #include "clientGameModeBase.h"
 #include "NetworkController.h"
+#include "GameEventDispatcher.h"
 AclientGameModeBase::AclientGameModeBase()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::AclientGameModeBase") );
@@ -15,13 +16,13 @@ AclientGameModeBase::~AclientGameModeBase()
     {
         delete mConnector;
     }
-    
 }
 void AclientGameModeBase::Init()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::Init") );
     NetworkController::GetInstance().Init(TEXT("127.0.0.1"),8899);
-    
+    UE_LOG(LogTemp, Display, TEXT("hahahahaha") );
+    GameEventDispatcher::GetInstance().Init();
 }
 //void AclientGameModeBase::BeginPlay()
 //{

@@ -3,8 +3,6 @@
 
 #include "NetworkController.h"
 
-NetworkController NetworkController::smInstance;
-
 NetworkController::NetworkController()
 {
 }
@@ -27,8 +25,14 @@ void NetworkController::Reset()
 {
     Finish();
 }
-    
 void NetworkController::ProcessNetworkMessage()
 {
-    mProtocol->ResolveMessage();
+    auto msg = mProtocol->ResolveMessage();
+    if(msg)
+    {
+        for(auto tlv : msg->mMsgList)
+        {
+            OnNewGameMessage.Broadcast(tlv->m_MsgType,tlv->mPbMsg);
+        }
+    }
 }

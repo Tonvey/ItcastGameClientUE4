@@ -15,12 +15,12 @@ NetProtocolResolver::~NetProtocolResolver()
 {
 }
 
-void NetProtocolResolver::ResolveMessage()
+TSharedPtr<GameMsg> NetProtocolResolver::ResolveMessage()
 {
     string _szInput;
     if(!mConnector->ReadData(_szInput)||_szInput.size()==0)
     {
-        return;
+        return nullptr;
     }
     mLastBuf.append(_szInput);
     GameMsg *gameMsg = nullptr;
@@ -47,21 +47,20 @@ void NetProtocolResolver::ResolveMessage()
             string msgContent = mLastBuf.substr(8, len);
             //buf要清理掉这个报文
             mLastBuf.erase(0, 8 + len);
-    
             //产生一个SingletTLV
-            //auto msg = new GameSingleTLV((GameSingleTLV::GameMsgType)msgType, msgContent);
-            //if(msg->mPbMsg==nullptr)
-            //{
-            //    continue;
-            //}
-    //
-            //if (gameMsg == nullptr)
-            //{
-            //    gameMsg = new GameMsg;
-            //}
-            ////将singletlv加到GameMsg
-            //gameMsg->mMsgList.push_back(msg);
-        }//
+            auto msg = new GameSingleTLV((GameSingleTLV::GameMsgType)msgType, msgContent);
+            if(msg->mPbMsg==nullptr)
+            {
+                continue;
+            }
+
+            if (gameMsg == nullptr)
+            {
+                gameMsg = new GameMsg;
+            }
+            //将singletlv加到GameMsg
+            gameMsg->mMsgList.push_back(msg);
+        }
         else
         {
             //剩下长度不够,就不要继续循环等待下一次数据到来再出来
@@ -69,5 +68,5 @@ void NetProtocolResolver::ResolveMessage()
         }
     }
     //返回值包含多个逻辑消息的列表
-    //return gameMsg;
+    return TSharedPtr<GameMsg>(gameMsg);
 }

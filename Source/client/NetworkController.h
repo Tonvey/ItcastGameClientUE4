@@ -5,23 +5,24 @@
 #include "CoreMinimal.h"
 #include "NetworkConnector.h"
 #include "NetProtocolResolver.h"
+#include "Singleton.hpp"
 
 /**
- * 
+ *
  */
-class CLIENT_API NetworkController
+class CLIENT_API NetworkController : public Singleton<NetworkController>
 {
 public:
-    static NetworkController &GetInstance(){return smInstance;}
 	NetworkController();
 	virtual ~NetworkController();
     virtual void Init(FString ip , uint16 port);
     virtual void Finish();
     virtual void Reset();
     virtual void ProcessNetworkMessage();
-    
+    DECLARE_EVENT_TwoParams(NetworkController, NewGameMessage,GameSingleTLV::GameMsgType,::google::protobuf::Message*);
+    virtual NewGameMessage &GetOnNewMessage(){return OnNewGameMessage;};
 private:
-    static NetworkController smInstance;
     TSharedPtr<NetworkConnector> mConnector;
     TSharedPtr<NetProtocolResolver> mProtocol;
+    NewGameMessage OnNewGameMessage;
 };

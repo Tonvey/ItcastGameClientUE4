@@ -2,6 +2,7 @@
 
 
 #include "PlayerBase.h"
+#include "GameEventDispatcher.h"
 
 // Sets default values
 APlayerBase::APlayerBase()
@@ -15,7 +16,7 @@ APlayerBase::APlayerBase()
 void APlayerBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+    GameEventDispatcher::GetInstance();
 }
 
 // Called every frame

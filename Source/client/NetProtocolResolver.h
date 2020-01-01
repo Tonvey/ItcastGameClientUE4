@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "NetworkConnector.h"
 #include <string>
+#include "GameMsg.h"
 
 /**
  * 
@@ -14,7 +15,7 @@ class CLIENT_API NetProtocolResolver
 public:
 	NetProtocolResolver(TSharedPtr<NetworkConnector> &connector);
 	~NetProtocolResolver();
-    virtual void ResolveMessage();
+    virtual TSharedPtr<GameMsg> ResolveMessage();
 private:
     TSharedPtr<NetworkConnector> mConnector;
     std::string mLastBuf;
