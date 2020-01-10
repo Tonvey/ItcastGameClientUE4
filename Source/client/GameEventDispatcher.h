@@ -9,11 +9,13 @@
 
 #define DECLARE_EVENT_MEMBER_INSTANCE(ev_name) \
 public:\
+    UFUNCTION(BlueprintCallable)\
     ev_name Get##ev_name()const\
     {\
         return m##ev_name;                       \
     }\
-private:\
+protected:\
+    UPROPERTY(BlueprintAssignable, Category = "Event")\
     ev_name m##ev_name;
 /**
  *
