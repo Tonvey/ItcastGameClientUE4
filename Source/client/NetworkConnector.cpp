@@ -58,7 +58,7 @@ bool NetworkConnector::ReadData(string &data)
     int32 readSize = 0;
     memset(buf,0,sizeof(buf));
     bool readResult = true;
-    while((readResult=mSocket->Recv(buf,sizeof(buf),readSize)))
+    while((readResult=mSocket->Recv(buf,sizeof(buf),readSize)),readResult)
     {
         readSum+=readSize;
         if(readSize==0)

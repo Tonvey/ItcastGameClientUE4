@@ -42,6 +42,6 @@ protected:
     int mPid = 0;
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString mPlayerName;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    ATextRender *mPlayerNameTextRender;
+    //UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    //ATextRender *mPlayerNameTextRender;
 };

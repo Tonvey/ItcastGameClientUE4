@@ -32,7 +32,7 @@ public:
     DECLARE_EVENT_MEMBER_INSTANCE(OnSyncPosition);
 public:
     typedef ::google::protobuf::Message GameMsg_t;
-    DECLARE_DELEGATE_OneParam(SingleGameMsgDelegate,GameMsg_t);
+    DECLARE_DELEGATE_OneParam(SingleGameMsgDelegate,GameMsg_t*);
     typedef TArray<TArray<SingleGameMsgDelegate>> GameMsgMap_t;
     typedef GameSingleTLV::GameMsgType GameMsgID_t;
 	GameEventDispatcher();

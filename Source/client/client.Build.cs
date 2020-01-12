@@ -41,7 +41,14 @@ public class client : ModuleRules
         string PlatformString = Target.Platform.ToString();
         string LibrariesPath = Path.Combine(ThirdPartyPath, "libprotobuf", "Libraries");
         // work on linux macos
-        PublicAdditionalLibraries.Add(Path.Combine(LibrariesPath, PlatformString,"libprotobuf.a")); 
+        if ((Target.Platform == UnrealTargetPlatform.Win64) || (Target.Platform == UnrealTargetPlatform.Win32))
+        {
+            PublicAdditionalLibraries.Add(Path.Combine(LibrariesPath, PlatformString, "libprotobuf.lib"));
+        }
+        else
+        {
+            PublicAdditionalLibraries.Add(Path.Combine(LibrariesPath, PlatformString, "libprotobuf.a"));
+        }
 
         //if ((Target.Platform == UnrealTargetPlatform.Win64) || (Target.Platform == UnrealTargetPlatform.Win32))
         //{
