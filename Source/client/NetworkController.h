@@ -19,7 +19,7 @@ public:
     virtual void Finish();
     virtual void Reset();
     virtual void ProcessNetworkMessage();
-    DECLARE_EVENT_TwoParams(NetworkController, NewGameMessage,GameSingleTLV::GameMsgType,::google::protobuf::Message*);
+    DECLARE_EVENT_TwoParams(NetworkController, NewGameMessage,GameSingleTLV::ENUM_GameMsgID,::google::protobuf::Message*);
     virtual NewGameMessage &GetOnNewMessage(){return OnNewGameMessage;};
 private:
     TSharedPtr<NetworkConnector> mConnector;

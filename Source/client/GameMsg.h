@@ -6,11 +6,12 @@
 #include "proto/msg.pb.h"
 #include <list>
 
+typedef ::google::protobuf::Message GameMsg_t;
 class GameSingleTLV
 {
 public:
     //定义逻辑消息的类型
-    enum GameMsgType {
+    enum ENUM_GameMsgID {
         GAME_MSG_LOGON_SYNCPID = 1,
         GAME_MSG_TALK_CONTENT = 2,
         GAME_MSG_NEW_POSTION = 3,
@@ -32,9 +33,10 @@ public:
     std::string serialize();
 
     ~GameSingleTLV();
-    GameSingleTLV(GameMsgType type, std::string content);
-    GameSingleTLV(GameMsgType type, ::google::protobuf::Message *pbmsg) :m_MsgType(type), mPbMsg(pbmsg) {}
+    GameSingleTLV(ENUM_GameMsgID type, std::string content);
+    GameSingleTLV(ENUM_GameMsgID type, ::google::protobuf::Message *pbmsg) :m_MsgType(type), mPbMsg(pbmsg) {}
 };
+typedef GameSingleTLV::ENUM_GameMsgID GameMsgID_t;
 /**
  * 
  */

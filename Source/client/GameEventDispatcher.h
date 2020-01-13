@@ -10,34 +10,55 @@
 #define DECLARE_EVENT_MEMBER_INSTANCE(ev_name) \
 public:\
     UFUNCTION(BlueprintCallable)\
-    ev_name Get##ev_name()const\
+    ev_name &Get##ev_name()\
     {\
         return m##ev_name;                       \
     }\
 protected:\
-    UPROPERTY(BlueprintAssignable, Category = "Event")\
-    ev_name m##ev_name;
+    UPROPERTY(BlueprintReadOnly, Category = "Event")\
+    ev_name m##ev_name;\
+
+
+#define DECLARE_MY_EVENT_MEMBER(owner_type,ev_name) \
+public:\
+    DECLARE_EVENT(owner_type,ev_name)\
+    DECLARE_EVENT_MEMBER_INSTANCE(ev_name)
+
+#define DECLARE_MY_EVENT_MEMBER_OneParam(owner_type,ev_name,...) \
+public:\
+    DECLARE_EVENT_OneParam(owner_type,ev_name,__VA_ARGS__) \
+    DECLARE_EVENT_MEMBER_INSTANCE(ev_name)
+
+#define DECLARE_MY_EVENT_MEMBER_TwoParams(owner_type,ev_name,t1,t2) \
+public:\
+    DECLARE_EVENT_TwoParams(owner_type,ev_name,t1,t2)\
+    DECLARE_EVENT_MEMBER_INSTANCE(ev_name)
+
+#define DECLARE_MY_EVENT_MEMBER_ThreeParams(owner_type,ev_name,t1,t2,t3) \
+public:\
+    DECLARE_EVENT_ThreeParams(owner_type,ev_name,t1,t2,t3)\
+    DECLARE_EVENT_MEMBER_INSTANCE(ev_name)
+
 /**
  *
  */
 class CLIENT_API GameEventDispatcher : public Singleton<GameEventDispatcher>
 {
 public:
-    DECLARE_EVENT_OneParam(GameEventDispatcher, OnSyncPid,int);
-    DECLARE_EVENT_OneParam(GameEventDispatcher, OnSyncPlayerName,std::string);
-    DECLARE_EVENT_OneParam(GameEventDispatcher, OnSyncPosition,FVector);
-
-    DECLARE_EVENT_MEMBER_INSTANCE(OnSyncPid);
-    DECLARE_EVENT_MEMBER_INSTANCE(OnSyncPlayerName);
-    DECLARE_EVENT_MEMBER_INSTANCE(OnSyncPosition);
+    DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnSyncPid,int);
+    DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnSyncPlayerName,std::string);
+    DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnPlayerLogoff,int);
+    DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnSyncPosition,int,pb::Position);
+    // new player : pid , name
+    DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnNewPlayer,int,std::string);
+    //chat : pid,name,content
+    DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher, OnSyncChat,int,std::string,std::string);
 public:
-    typedef ::google::protobuf::Message GameMsg_t;
     DECLARE_DELEGATE_OneParam(SingleGameMsgDelegate,GameMsg_t*);
     typedef TArray<TArray<SingleGameMsgDelegate>> GameMsgMap_t;
-    typedef GameSingleTLV::GameMsgType GameMsgID_t;
 	GameEventDispatcher();
 	~GameEventDispatcher();
-    void OnNewGameMessage(GameSingleTLV::GameMsgType,GameMsg_t*);
+    void OnNewGameMessage(GameMsgID_t,GameMsg_t*);
     void Register(GameMsgID_t id,SingleGameMsgDelegate &callback);
     void Unregister(GameMsgID_t id);
     void Init();

@@ -29,7 +29,7 @@ GameSingleTLV::~GameSingleTLV()
     }
 }
 
-GameSingleTLV::GameSingleTLV(GameMsgType type, std::string content)
+GameSingleTLV::GameSingleTLV(GameMsgID_t type, std::string content)
     :m_MsgType(type)
 {
 

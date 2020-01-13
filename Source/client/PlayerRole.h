@@ -16,8 +16,8 @@ UCLASS()
 class CLIENT_API APlayerRole : public APlayerBase
 {
 	GENERATED_BODY()
-    DECLARE_EVENT_OneParam(APlayerRole, OnSetPid,int);
-    DECLARE_EVENT_OneParam(APlayerRole, OnSetPlayerName,FString);
+    DECLARE_MULTICAST_DELEGATE_OneParam(OnSetPid,int);
+    DECLARE_MULTICAST_DELEGATE_OneParam(OnSetPlayerName,FString);
     DECLARE_EVENT_MEMBER_INSTANCE(OnSetPid);
     DECLARE_EVENT_MEMBER_INSTANCE(OnSetPlayerName);
 public:
@@ -36,12 +36,15 @@ public:
     UFUNCTION(BlueprintCallable)
     void SetPlayerName(FString _playerName);
     void SetPlayerName(std::string _playerName);
+    void SetPosition(int _pid,pb::Position _pos);
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int mPid = 0;
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int HP = 0;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString mPlayerName;
-    //UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    //ATextRender *mPlayerNameTextRender;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTextRenderComponent* mPlayerNameTextComp;
 };

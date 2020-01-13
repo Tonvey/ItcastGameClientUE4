@@ -18,7 +18,7 @@ public:
     ~AclientGameModeBase();
     UFUNCTION(BlueprintCallable, Category = "Action")
     virtual void Init();
-    //virtual void BeginPlay()override;
+    virtual void BeginPlay()override;
     virtual void Tick(float deltaTime) override;
 private:
     NetworkConnector *mConnector;
