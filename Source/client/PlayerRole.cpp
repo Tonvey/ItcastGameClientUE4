@@ -4,6 +4,7 @@
 #include "PlayerRole.h"
 #include "GameEventDispatcher.h"
 #include "GameFramework/Controller.h"
+#include "DataAdapter.h"
 
 APlayerRole::APlayerRole()
 {
@@ -34,15 +35,9 @@ void APlayerRole::SetPosition(int _pid,pb::Position _pos)
     {
         return;
     }
-    AController *ctl = this->Controller;
-    FVector location;
-    location.X = _pos.z();
-    location.Y= _pos.x();
-    location.Z = _pos.y();
-    location *= 100;
+    auto location = DataAdapter::PostionSC(_pos);
     UE_LOG(LogTemp, Display, TEXT("PlayerRole::SetPosition x:%f y:%f z:%f"),location.X,location.Y,location.Z);
     this->SetActorLocation(location);
-    //SetLocation(location);
 }
 void APlayerRole::SetPlayerName(FString _playerName)
 {
