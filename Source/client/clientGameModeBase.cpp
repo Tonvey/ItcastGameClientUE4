@@ -30,7 +30,6 @@ void AclientGameModeBase::BeginPlay()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::BeginPlay") );
     Super::BeginPlay();
-    Init();
 }
 void AclientGameModeBase::Tick(float deltaTime)
 {
