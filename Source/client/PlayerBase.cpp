@@ -3,6 +3,7 @@
 
 #include "PlayerBase.h"
 #include "GameEventDispatcher.h"
+#include <stdexcept>
 
 // Sets default values
 APlayerBase::APlayerBase()
@@ -33,3 +34,31 @@ void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+void APlayerBase::SetPid(int _pid)
+{
+    this->mPid = _pid;
+    this->mOnSetPid.Broadcast(_pid);
+}
+void APlayerBase::SetPlayerName(std::string _playerName)
+{
+    mPlayerName = UTF8_TO_TCHAR(_playerName.c_str());
+    this->mOnSetPlayerName.Broadcast(mPlayerName);
+    if (this->mPlayerNameTextComp != nullptr)
+    {
+		this->mPlayerNameTextComp->SetText(mPlayerName);
+    }
+}
+void APlayerBase::SetPlayerName(FString _playerName)
+{
+    mPlayerName = _playerName;
+    this->mOnSetPlayerName.Broadcast(mPlayerName);
+    if (this->mPlayerNameTextComp != nullptr)
+    {
+		this->mPlayerNameTextComp->SetText(mPlayerName);
+    }
+}
+
+void APlayerBase::SetPosition(int _pid, pb::Position _pos)
+{
+    throw std::runtime_error("Not implemented!");
+}

@@ -13,5 +13,8 @@ UCLASS()
 class CLIENT_API ACompetitorRole : public APlayerBase
 {
 	GENERATED_BODY()
-	
+public:
+	ACompetitorRole();
+	~ACompetitorRole();
+    virtual void SetPosition(int _pid,pb::Position _pos) override;
 };

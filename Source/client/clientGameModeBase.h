@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "NetworkConnector.h"
+#include "GameEventDispatcher.h"
 #include "clientGameModeBase.generated.h"
 /**
  * 
@@ -20,6 +21,7 @@ public:
     virtual void Init();
     virtual void BeginPlay()override;
     virtual void Tick(float deltaTime) override;
+    virtual void OnNewPlayer(int _pid, std::string _name);
 private:
     NetworkConnector *mConnector;
 };

@@ -49,7 +49,7 @@ public:
     DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnSyncPlayerName,std::string);
     DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnPlayerLogoff,int);
     DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnSyncPosition,int,pb::Position);
-    // new player : pid , name
+    // new player : pid , name , position
     DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnNewPlayer,int,std::string);
     //chat : pid,name,content
     DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher, OnSyncChat,int,std::string,std::string);

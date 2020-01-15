@@ -39,19 +39,20 @@ void GameEventDispatcher::OnNewGameMessage(GameSingleTLV::ENUM_GameMsgID type,::
             {
             case 1:
             {
-                //聊天
+                //talk
                 break;
             }
             case 2:
             {
-                //新玩家初始位置
+                //new player
                 mOnNewPlayer.Broadcast(msg->pid(), msg->username());
+                //TODO: 杩欐牱鍒嗙鍙兘浼氬鑷村叾浠栫帺瀹惰鑹蹭笉鑳藉強鏃跺鐞嗙Щ鍔ㄦ秷鎭殑闂
                 mOnSyncPosition.Broadcast(msg->pid(), msg->p());
                 break;
             }
             case 4:
             {
-                //玩家移动同步
+                //move
                 mOnSyncPosition.Broadcast(msg->pid(), msg->p());
                 break;
             }
