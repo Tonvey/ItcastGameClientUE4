@@ -16,4 +16,5 @@ class CLIENT_API ACompetitorRole : public APlayerBase
 public:
 	ACompetitorRole();
 	~ACompetitorRole();
+	void OnLogoff(int _pid);
 };

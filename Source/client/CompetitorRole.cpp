@@ -11,9 +11,19 @@ ACompetitorRole::ACompetitorRole()
     GameEventDispatcher::GetInstance().GetOnSyncPid().AddUObject(this,&ACompetitorRole::SetPid);
     GameEventDispatcher::GetInstance().GetOnSyncPlayerName().AddUObject(this,&ACompetitorRole::SetPlayerName);
     GameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &ACompetitorRole::SetPosition);
+    GameEventDispatcher::GetInstance().GetOnPlayerLogoff().AddUObject(this,&ACompetitorRole::OnLogoff);
 }
 
 ACompetitorRole::~ACompetitorRole()
 {
+}
+
+void ACompetitorRole::OnLogoff(int _pid)
+{
+    if (mPid != _pid)
+    {
+        return;
+    }
+    Destroy(this);
 }
 
