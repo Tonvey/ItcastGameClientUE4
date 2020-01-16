@@ -3,7 +3,7 @@
 
 #include "PlayerBase.h"
 #include "GameEventDispatcher.h"
-#include <stdexcept>
+#include "DataAdapter.h"
 
 // Sets default values
 APlayerBase::APlayerBase()
@@ -48,7 +48,7 @@ void APlayerBase::SetPlayerName(std::string _playerName)
 		this->mPlayerNameTextComp->SetText(mPlayerName);
     }
 }
-void APlayerBase::SetPlayerName(FString _playerName)
+void APlayerBase::SetPlayerName_Implementation(const FString &_playerName)
 {
     mPlayerName = _playerName;
     this->mOnSetPlayerName.Broadcast(mPlayerName);
@@ -60,5 +60,27 @@ void APlayerBase::SetPlayerName(FString _playerName)
 
 void APlayerBase::SetPosition(int _pid, pb::Position _pos)
 {
-    throw std::runtime_error("Not implemented!");
+    if (_pid != mPid)
+    {
+        return;
+    }
+    auto location = DataAdapter::PostionSC(_pos);
+    UE_LOG(LogTemp, Display, TEXT("PlayerBase::SetPosition x:%f y:%f z:%f"),location.X,location.Y,location.Z);
+    FQuat locationAndDir;
+    locationAndDir.X = location.X;
+    locationAndDir.Y = location.Y;
+    locationAndDir.Z = location.Z;
+    locationAndDir.W = _pos.v();
+    this->SetPositionAndDirection(locationAndDir);
+}
+
+void APlayerBase::SetPositionAndDirection(FQuat _pos)
+{
+    FVector location;
+    location.X = _pos.X;
+    location.Y = _pos.Y;
+    location.Z = _pos.Z;
+    this->SetActorLocation(location);
+    FQuat rot = FQuat::MakeFromEuler(FVector(0, 0, _pos.W));
+    this->SetActorRotation(rot);
 }

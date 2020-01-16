@@ -45,6 +45,7 @@ public:\
 class CLIENT_API GameEventDispatcher : public Singleton<GameEventDispatcher>
 {
 public:
+    friend Singleton<GameEventDispatcher>;
     DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnSyncPid,int);
     DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnSyncPlayerName,std::string);
     DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnPlayerLogoff,int);
@@ -54,15 +55,15 @@ public:
     //chat : pid,name,content
     DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher, OnSyncChat,int,std::string,std::string);
 public:
-    DECLARE_DELEGATE_OneParam(SingleGameMsgDelegate,GameMsg_t*);
-    typedef TArray<TArray<SingleGameMsgDelegate>> GameMsgMap_t;
-	GameEventDispatcher();
-	~GameEventDispatcher();
-    void OnNewGameMessage(GameMsgID_t,GameMsg_t*);
-    void Register(GameMsgID_t id,SingleGameMsgDelegate &callback);
-    void Unregister(GameMsgID_t id);
+    //DECLARE_DELEGATE_OneParam(SingleGameMsgDelegate,GameMsg_t*);
+    //typedef TArray<TArray<SingleGameMsgDelegate>> GameMsgMap_t;
+    //void Register(GameMsgID_t id,SingleGameMsgDelegate &callback);
+    //void Unregister(GameMsgID_t id);
     void Init();
+    void OnNewGameMessage(GameMsgID_t,GameMsg_t*);
 
 private:
-    GameMsgMap_t mGameMsgMap;
+	GameEventDispatcher();
+	~GameEventDispatcher();
+    //GameMsgMap_t mGameMsgMap;
 };

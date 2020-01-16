@@ -17,14 +17,4 @@ class CLIENT_API APlayerRole : public APlayerBase
 public:
     APlayerRole();
     ~APlayerRole();
-    int Pid()const
-    {
-        return mPid;
-    }
-    FString PlayerName()const
-    {
-        return mPlayerName;
-    }
-    virtual void SetPosition(int _pid,pb::Position _pos) override;
-
 };

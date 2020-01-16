@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Components/TextRenderComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameEventDispatcher.h"
 #include "PlayerBase.generated.h"
 
@@ -32,13 +33,17 @@ public:
 
     UFUNCTION(BlueprintCallable)
     virtual void SetPid(int _pid);
+    int GetPid()const { return mPid; }
 
     virtual void SetPlayerName(std::string _playerName);
+    FString GetPlayerName()const { return mPlayerName; }
 
-    UFUNCTION(BlueprintCallable)
-    virtual void SetPlayerName(FString _playerName);
+    //UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintNativeEvent,Category = "Cpp_Event")
+    void SetPlayerName(const FString &_playerName);
 
     virtual void SetPosition(int _pid,pb::Position _pos);
+    virtual void SetPositionAndDirection(FQuat _pos);
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int mPid = 0;
@@ -48,4 +53,6 @@ protected:
     FString mPlayerName;
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTextRenderComponent* mPlayerNameTextComp;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USkeletalMeshComponent* mPlayerMeshComp;
 };

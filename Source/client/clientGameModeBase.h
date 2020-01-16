@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "NetworkConnector.h"
 #include "GameEventDispatcher.h"
+#include "CompetitorRole.h"
+#include "PlayerRole.h"
 #include "clientGameModeBase.generated.h"
 /**
  * 
@@ -17,11 +19,23 @@ class CLIENT_API AclientGameModeBase : public AGameModeBase
 public:
     AclientGameModeBase();
     ~AclientGameModeBase();
+    UFUNCTION(BlueprintImplementableEvent)
+    ACompetitorRole *CreateACompetitorToLevel(int _pid ,const FString &_name);
     UFUNCTION(BlueprintCallable, Category = "Action")
     virtual void Init();
     virtual void BeginPlay()override;
     virtual void Tick(float deltaTime) override;
     virtual void OnNewPlayer(int _pid, std::string _name);
-private:
-    NetworkConnector *mConnector;
+    virtual void OnSyncMainPlayerId(int _pid);
+    virtual void RegisterPlayer(int _pid ,APlayerBase *_player);
+    virtual void UnregisterPlayer(int _pid);
+    virtual void RegisterMainPlayer(APlayerRole *mainPlayer);
+    virtual void UnregisterMainPlayer(APlayerRole *mainPlayer);
+    static AclientGameModeBase &GetCurrentClientGameMode() { return *smCurrentMode; }
+protected:
+    TMap<int, APlayerBase*> mPlayerMap;
+    static AclientGameModeBase* smCurrentMode;
+    APlayerRole *mMainPlayer;
+    FDelegateHandle mainPlayerSetPidHandle;
+    FDelegateHandle mNewPlayerHandle;
 };

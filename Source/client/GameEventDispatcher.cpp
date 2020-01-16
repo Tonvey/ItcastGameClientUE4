@@ -6,18 +6,19 @@ using namespace std;
 
 GameEventDispatcher::GameEventDispatcher()
 {
+    UE_LOG(LogTemp, Display, TEXT("GameEventDispatcher::GameEventDispatcher"));
+    NetworkController::GetInstance().GetOnNewMessage().AddRaw(this,&GameEventDispatcher::OnNewGameMessage);
 }
 
 GameEventDispatcher::~GameEventDispatcher()
 {
+    UE_LOG(LogTemp, Display, TEXT("GameEventDispatcher::~GameEventDispatcher"));
 }
 
 void GameEventDispatcher::Init()
 {
-    auto &event = NetworkController::GetInstance().GetOnNewMessage();
-    event.AddRaw(this,&GameEventDispatcher::OnNewGameMessage);
 }
-void GameEventDispatcher::OnNewGameMessage(GameSingleTLV::ENUM_GameMsgID type,::google::protobuf::Message *_msg)
+void GameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
 {
     UE_LOG(LogTemp, Display, TEXT("GameEventDispatcher::OnNewGameMessage %d "), type );
     switch(type)
@@ -91,15 +92,15 @@ void GameEventDispatcher::OnNewGameMessage(GameSingleTLV::ENUM_GameMsgID type,::
     }
 }
 
-void GameEventDispatcher::Register(GameMsgID_t id,SingleGameMsgDelegate &callback)
-{
-    int idx = int(id);
-    if(idx>mGameMsgMap.Num())
-    {
-        mGameMsgMap.SetNum(idx,true);
-    }
-    mGameMsgMap[idx].Add(callback);
-}
-void GameEventDispatcher::Unregister(GameMsgID_t id)
-{
-}
+//void GameEventDispatcher::Register(GameMsgID_t id,SingleGameMsgDelegate &callback)
+//{
+//    int idx = int(id);
+//    if(idx>mGameMsgMap.Num())
+//    {
+//        mGameMsgMap.SetNum(idx,true);
+//    }
+//    mGameMsgMap[idx].Add(callback);
+//}
+//void GameEventDispatcher::Unregister(GameMsgID_t id)
+//{
+//}

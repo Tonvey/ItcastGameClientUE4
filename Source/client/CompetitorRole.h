@@ -16,5 +16,4 @@ class CLIENT_API ACompetitorRole : public APlayerBase
 public:
 	ACompetitorRole();
 	~ACompetitorRole();
-    virtual void SetPosition(int _pid,pb::Position _pos) override;
 };
