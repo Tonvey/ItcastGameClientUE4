@@ -10,6 +10,6 @@ public class clientTarget : TargetRules
 		Type = TargetType.Game;
 
 		ExtraModuleNames.AddRange( new string[] { "client" } );
-        CppStandard = CppStandardVersion.Cpp17;
+        //CppStandard = CppStandardVersion.Cpp17;
 	}
 }
