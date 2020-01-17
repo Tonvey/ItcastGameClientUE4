@@ -17,4 +17,5 @@ class CLIENT_API APlayerRole : public APlayerBase
 public:
     APlayerRole();
     ~APlayerRole();
+    virtual void SetPid(int _pid) override;
 };

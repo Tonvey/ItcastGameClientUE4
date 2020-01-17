@@ -26,16 +26,14 @@ public:
     virtual void BeginPlay()override;
     virtual void Tick(float deltaTime) override;
     virtual void OnNewPlayer(int _pid, std::string _name);
-    virtual void OnSyncMainPlayerId(int _pid);
+    virtual void OnSyncMainPlayerId(APlayerRole* mainPlayer, int _pid);
     virtual void RegisterPlayer(int _pid ,APlayerBase *_player);
     virtual void UnregisterPlayer(int _pid);
-    virtual void RegisterMainPlayer(APlayerRole *mainPlayer);
-    virtual void UnregisterMainPlayer();
-    static AclientGameModeBase &GetCurrentClientGameMode() { return *smCurrentMode; }
+    static AclientGameModeBase &GetCurrentClientGameMode(){ return *smCurrentMode; }
 protected:
     TMap<int, APlayerBase*> mPlayerMap;
     static AclientGameModeBase* smCurrentMode;
     APlayerRole *mMainPlayer;
-    FDelegateHandle mainPlayerSetPidHandle;
+    FDelegateHandle mMainPlayerSyncHandle;
     FDelegateHandle mNewPlayerHandle;
 };

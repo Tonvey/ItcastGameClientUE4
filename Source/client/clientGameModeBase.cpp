@@ -17,14 +17,15 @@ AclientGameModeBase::~AclientGameModeBase()
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::~AclientGameModeBase") );
     NetworkController::GetInstance().Reset();
     mPlayerMap.Reset();
-    if (mMainPlayer != nullptr)
-    {
-        UnregisterMainPlayer();
-    }
     if (mNewPlayerHandle.IsValid())
     {
         GameEventDispatcher::GetInstance().GetOnNewPlayer().Remove(mNewPlayerHandle);
         mNewPlayerHandle.Reset();
+    }
+    if (mMainPlayerSyncHandle.IsValid())
+    {
+        GameEventDispatcher::GetInstance().GetOnMainPlayerSync().Remove(mMainPlayerSyncHandle);
+        mMainPlayerSyncHandle.Reset();
     }
 }
 void AclientGameModeBase::Init()
@@ -34,6 +35,7 @@ void AclientGameModeBase::Init()
     UE_LOG(LogTemp, Display, TEXT("hahahahaha") );
     GameEventDispatcher::GetInstance().Init();
     this->mNewPlayerHandle = GameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
+    this->mMainPlayerSyncHandle = GameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
 }
 void AclientGameModeBase::BeginPlay()
 {
@@ -66,9 +68,17 @@ void AclientGameModeBase::OnNewPlayer(int _pid, std::string _name)
         assert(false);
     }
 }
-void AclientGameModeBase::OnSyncMainPlayerId(int _pid)
+void AclientGameModeBase::OnSyncMainPlayerId(APlayerRole *mainPlayer , int _pid)
 {
-    this->RegisterPlayer(_pid, mMainPlayer);
+    if (mMainPlayer != mainPlayer)
+    {
+        if (mMainPlayer != nullptr)
+        {
+            this->UnregisterPlayer(mMainPlayer->GetPid());
+        }
+        this->mMainPlayer = mainPlayer;
+        this->RegisterPlayer(_pid, mainPlayer);
+    }
 }
 void AclientGameModeBase::RegisterPlayer(int _pid, APlayerBase* _player)
 {
@@ -84,28 +94,4 @@ void AclientGameModeBase::RegisterPlayer(int _pid, APlayerBase* _player)
 void AclientGameModeBase::UnregisterPlayer(int _pid)
 {
     mPlayerMap.Remove(_pid);
-}
-void AclientGameModeBase::RegisterMainPlayer(APlayerRole* mainPlayer)
-{
-    if (mMainPlayer != nullptr)
-    {
-        UnregisterMainPlayer();
-    }
-    mMainPlayer = mainPlayer;
-    this->mainPlayerSetPidHandle = mMainPlayer->GetOnSetPid().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
-}
-
-void AclientGameModeBase::UnregisterMainPlayer()
-{
-    //TODO remove from event ....
-    if (mainPlayerSetPidHandle.IsValid()&&mMainPlayer!=nullptr)
-    {
-        mMainPlayer->GetOnSetPid().Remove(mainPlayerSetPidHandle);
-        mMainPlayer = nullptr;
-        mainPlayerSetPidHandle.Reset();
-    }
-    else
-    {
-		UE_LOG(LogTemp, Error, TEXT("AclientGameModeBase::UnregisterMainPlayer called unexpected"));
-    }
 }

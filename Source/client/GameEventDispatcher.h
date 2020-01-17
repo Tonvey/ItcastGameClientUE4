@@ -7,6 +7,7 @@
 #include "GameMsg.h"
 #include "Singleton.hpp"
 
+class APlayerRole;
 #define DECLARE_EVENT_MEMBER_INSTANCE(ev_name) \
 public:\
     UFUNCTION(BlueprintCallable)\
@@ -50,6 +51,7 @@ public:
     DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnSyncPlayerName,std::string);
     DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnPlayerLogoff,int);
     DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnSyncPosition,int,pb::Position);
+    DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnMainPlayerSync,APlayerRole *,int);
     // new player : pid , name , position
     DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnNewPlayer,int,std::string);
     //chat : pid,name,content
