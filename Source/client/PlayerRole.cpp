@@ -16,6 +16,6 @@ APlayerRole::APlayerRole()
 }
 APlayerRole::~APlayerRole()
 {
-    AclientGameModeBase::GetCurrentClientGameMode().UnregisterMainPlayer(this);
+    AclientGameModeBase::GetCurrentClientGameMode().UnregisterMainPlayer();
 }
 

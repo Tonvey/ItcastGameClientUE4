@@ -19,11 +19,12 @@ AclientGameModeBase::~AclientGameModeBase()
     mPlayerMap.Reset();
     if (mMainPlayer != nullptr)
     {
-        UnregisterMainPlayer(mMainPlayer);
+        UnregisterMainPlayer();
     }
     if (mNewPlayerHandle.IsValid())
     {
         GameEventDispatcher::GetInstance().GetOnNewPlayer().Remove(mNewPlayerHandle);
+        mNewPlayerHandle.Reset();
     }
 }
 void AclientGameModeBase::Init()
@@ -88,15 +89,23 @@ void AclientGameModeBase::RegisterMainPlayer(APlayerRole* mainPlayer)
 {
     if (mMainPlayer != nullptr)
     {
-        UnregisterMainPlayer(mMainPlayer);
+        UnregisterMainPlayer();
     }
     mMainPlayer = mainPlayer;
     this->mainPlayerSetPidHandle = mMainPlayer->GetOnSetPid().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
 }
 
-void AclientGameModeBase::UnregisterMainPlayer(APlayerRole* mainPlayer)
+void AclientGameModeBase::UnregisterMainPlayer()
 {
     //TODO remove from event ....
-    mMainPlayer->GetOnSetPid().Remove(mainPlayerSetPidHandle);
-    mMainPlayer = nullptr;
+    if (mainPlayerSetPidHandle.IsValid()&&mMainPlayer!=nullptr)
+    {
+        mMainPlayer->GetOnSetPid().Remove(mainPlayerSetPidHandle);
+        mMainPlayer = nullptr;
+        mainPlayerSetPidHandle.Reset();
+    }
+    else
+    {
+		UE_LOG(LogTemp, Error, TEXT("AclientGameModeBase::UnregisterMainPlayer called unexpected"));
+    }
 }

@@ -30,7 +30,7 @@ public:
     virtual void RegisterPlayer(int _pid ,APlayerBase *_player);
     virtual void UnregisterPlayer(int _pid);
     virtual void RegisterMainPlayer(APlayerRole *mainPlayer);
-    virtual void UnregisterMainPlayer(APlayerRole *mainPlayer);
+    virtual void UnregisterMainPlayer();
     static AclientGameModeBase &GetCurrentClientGameMode() { return *smCurrentMode; }
 protected:
     TMap<int, APlayerBase*> mPlayerMap;
