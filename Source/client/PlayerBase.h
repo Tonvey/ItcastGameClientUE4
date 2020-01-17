@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameEventDispatcher.h"
 #include "PlayerBase.generated.h"
 
@@ -43,6 +44,7 @@ public:
     void SetPlayerName(const FString &_playerName);
 
     virtual void SetPosition(int _pid,pb::Position _pos);
+    virtual pb::Position GetPosition()const;
     virtual void SetPositionAndDirection(FQuat _pos);
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)

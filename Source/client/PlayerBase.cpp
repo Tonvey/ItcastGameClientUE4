@@ -74,12 +74,24 @@ void APlayerBase::SetPosition(int _pid, pb::Position _pos)
     this->SetPositionAndDirection(locationAndDir);
 }
 
+pb::Position APlayerBase::GetPosition() const
+{
+    auto location = this->GetActorLocation();
+    location.Z -= this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+    pb::Position pos = DataAdapter::PostionCS(location);
+    auto rot = this->GetActorRotation();
+    pos.set_v(rot.Vector().Z);
+    pos.set_bloodvalue(this->HP);
+    return pos;
+}
+
 void APlayerBase::SetPositionAndDirection(FQuat _pos)
 {
     FVector location;
     location.X = _pos.X;
     location.Y = _pos.Y;
     location.Z = _pos.Z;
+    location.Z += this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
     this->SetActorLocation(location);
     FQuat rot = FQuat::MakeFromEuler(FVector(0, 0, _pos.W));
     this->SetActorRotation(rot);
