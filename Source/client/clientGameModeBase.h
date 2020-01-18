@@ -27,6 +27,7 @@ public:
     virtual void Tick(float deltaTime) override;
     virtual void OnNewPlayer(int _pid, std::string _name);
     virtual void OnSyncMainPlayerId(APlayerRole* mainPlayer, int _pid);
+    virtual void OnPlayerLogoff(int _pid);
     virtual void RegisterPlayer(int _pid ,APlayerBase *_player);
     virtual void UnregisterPlayer(int _pid);
     static AclientGameModeBase &GetCurrentClientGameMode(){ return *smCurrentMode; }
@@ -36,4 +37,5 @@ protected:
     APlayerRole *mMainPlayer;
     FDelegateHandle mMainPlayerSyncHandle;
     FDelegateHandle mNewPlayerHandle;
+    FDelegateHandle mMainPlayerLogoffHandle;
 };

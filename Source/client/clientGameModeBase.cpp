@@ -36,6 +36,7 @@ void AclientGameModeBase::Init()
     GameEventDispatcher::GetInstance().Init();
     this->mNewPlayerHandle = GameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
     this->mMainPlayerSyncHandle = GameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
+    this->mMainPlayerLogoffHandle = GameEventDispatcher::GetInstance().GetOnPlayerLogoff().AddUObject(this, &AclientGameModeBase::OnPlayerLogoff);
 }
 void AclientGameModeBase::BeginPlay()
 {
@@ -79,6 +80,10 @@ void AclientGameModeBase::OnSyncMainPlayerId(APlayerRole *mainPlayer , int _pid)
         this->mMainPlayer = mainPlayer;
         this->RegisterPlayer(_pid, mainPlayer);
     }
+}
+void AclientGameModeBase::OnPlayerLogoff(int _pid)
+{
+    this->UnregisterPlayer(_pid);
 }
 void AclientGameModeBase::RegisterPlayer(int _pid, APlayerBase* _player)
 {

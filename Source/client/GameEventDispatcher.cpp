@@ -71,6 +71,13 @@ void GameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
         }
     case GameMsgID_t::GAME_MSG_SUR_PLAYER:
         {
+            auto msg = static_cast<pb::SyncPlayers*>(_msg);
+            auto players = msg->ps();
+            for (auto& p : players)
+            {
+                mOnNewPlayer.Broadcast(p.pid(), p.username());
+                mOnSyncPosition.Broadcast(p.pid(), p.p());
+            }
             break;
         }
     case GameMsgID_t::GAME_MSG_SKILL_BROAD:
