@@ -14,7 +14,6 @@ UCLASS()
 class CLIENT_API APlayerBase : public ACharacter
 {
 	GENERATED_BODY()
-    DECLARE_MY_EVENT_MEMBER_OneParam(APlayerBase,OnSetPid,int);
     DECLARE_MY_EVENT_MEMBER_OneParam(APlayerBase,OnSetPlayerName,FString);
 
 public:

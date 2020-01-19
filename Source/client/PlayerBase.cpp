@@ -36,7 +36,6 @@ void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void APlayerBase::SetPid(int _pid)
 {
     this->mPid = _pid;
-    this->mOnSetPid.Broadcast(_pid);
 }
 void APlayerBase::SetPlayerName(std::string _playerName)
 {
