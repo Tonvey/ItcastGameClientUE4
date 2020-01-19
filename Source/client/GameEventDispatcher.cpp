@@ -97,6 +97,17 @@ void GameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
     }
 }
 
+void GameEventDispatcher::Reset()
+{
+    mOnSyncPid.Clear();
+	mOnSyncPlayerName.Clear();
+    mOnPlayerLogoff.Clear();
+    mOnSyncPosition.Clear();
+    mOnMainPlayerSync.Clear();
+    mOnNewPlayer.Clear();
+    mOnSyncChat.Clear();
+}
+
 //void GameEventDispatcher::Register(GameMsgID_t id,SingleGameMsgDelegate &callback)
 //{
 //    int idx = int(id);

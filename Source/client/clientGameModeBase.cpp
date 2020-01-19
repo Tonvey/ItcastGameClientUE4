@@ -26,17 +26,8 @@ AclientGameModeBase::~AclientGameModeBase()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::~AclientGameModeBase") );
     NetworkController::GetInstance().Reset();
+    GameEventDispatcher::GetInstance().Reset();
     mPlayerMap.Reset();
-    if (mNewPlayerHandle.IsValid())
-    {
-        GameEventDispatcher::GetInstance().GetOnNewPlayer().Remove(mNewPlayerHandle);
-        mNewPlayerHandle.Reset();
-    }
-    if (mMainPlayerSyncHandle.IsValid())
-    {
-        GameEventDispatcher::GetInstance().GetOnMainPlayerSync().Remove(mMainPlayerSyncHandle);
-        mMainPlayerSyncHandle.Reset();
-    }
 }
 ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(int _pid,
     const FString& _name,
@@ -56,6 +47,7 @@ ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(in
     newRole->SetPid(_pid);
     newRole->SetPlayerName(_name);
     newRole->SetPlayerGroundLocation(_groundLocation);
+    newRole->GetOnLogoff().AddUObject(this, &AclientGameModeBase::OnPlayerLogoff);
     return newRole;
 }
 void AclientGameModeBase::Init()
@@ -64,9 +56,8 @@ void AclientGameModeBase::Init()
     NetworkController::GetInstance().Init(TEXT("127.0.0.1"),8899);
     UE_LOG(LogTemp, Display, TEXT("hahahahaha") );
     GameEventDispatcher::GetInstance().Init();
-    this->mNewPlayerHandle = GameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
-    this->mMainPlayerSyncHandle = GameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
-    this->mMainPlayerLogoffHandle = GameEventDispatcher::GetInstance().GetOnPlayerLogoff().AddUObject(this, &AclientGameModeBase::OnPlayerLogoff);
+    GameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
+    GameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
 }
 void AclientGameModeBase::BeginPlay()
 {
@@ -132,3 +123,4 @@ void AclientGameModeBase::UnregisterPlayer(int _pid)
 {
     mPlayerMap.Remove(_pid);
 }
+

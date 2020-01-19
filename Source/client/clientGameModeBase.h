@@ -39,7 +39,4 @@ protected:
     TMap<int, APlayerBase*> mPlayerMap;
     static AclientGameModeBase* smCurrentMode;
     APlayerRole *mMainPlayer;
-    FDelegateHandle mMainPlayerSyncHandle;
-    FDelegateHandle mNewPlayerHandle;
-    FDelegateHandle mMainPlayerLogoffHandle;
 };

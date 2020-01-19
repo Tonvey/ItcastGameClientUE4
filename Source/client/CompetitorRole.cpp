@@ -9,8 +9,6 @@
 ACompetitorRole::ACompetitorRole()
 {
     UE_LOG(LogTemp, Display, TEXT("ACompetitorRole::ACompetitorRole create"));
-    GameEventDispatcher::GetInstance().GetOnSyncPid().AddUObject(this,&ACompetitorRole::SetPid);
-    GameEventDispatcher::GetInstance().GetOnSyncPlayerName().AddUObject(this,&ACompetitorRole::SetPlayerName);
     GameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &ACompetitorRole::SetPlayerGroundLocation);
     GameEventDispatcher::GetInstance().GetOnPlayerLogoff().AddUObject(this,&ACompetitorRole::OnLogoff);
 	PrimaryActorTick.bCanEverTick = true;
@@ -22,6 +20,8 @@ ACompetitorRole::ACompetitorRole()
 
 ACompetitorRole::~ACompetitorRole()
 {
+    mOnLogoff.Broadcast(this->mPid);
+    mOnLogoff.Clear();
 }
 
 void ACompetitorRole::SetPlayerGroundLocation(int _pid, pb::Position _pos)
@@ -45,7 +45,7 @@ void ACompetitorRole::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
     //UE_LOG(LogTemp, Display, TEXT("ACompetitorRole::Tick"));
     UE_LOG(LogTemp, Display, TEXT("ACompetitorRole::Tick max speed: %f"),this->GetCharacterMovement()->GetMaxSpeed());
-    this->AddMovementInput(this->GetActorForwardVector());
+    //this->AddMovementInput(this->GetActorForwardVector());
 }
 
 void ACompetitorRole::OnLogoff(int _pid)
@@ -55,5 +55,7 @@ void ACompetitorRole::OnLogoff(int _pid)
         return;
     }
     Destroy(this);
+    mOnLogoff.Broadcast(this->mPid);
+    mOnLogoff.Clear();
 }
 

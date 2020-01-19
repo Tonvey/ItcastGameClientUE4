@@ -63,6 +63,7 @@ public:
     //void Unregister(GameMsgID_t id);
     void Init();
     void OnNewGameMessage(GameMsgID_t,GameMsg_t*);
+    virtual void Reset();
 
 private:
 	GameEventDispatcher();

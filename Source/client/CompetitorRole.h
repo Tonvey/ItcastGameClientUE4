@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PlayerBase.h"
+#include "GameEventDispatcher.h"
 #include "CompetitorRole.generated.h"
 
 /**
@@ -13,6 +14,7 @@ UCLASS()
 class CLIENT_API ACompetitorRole : public APlayerBase
 {
 	GENERATED_BODY()
+    DECLARE_MY_EVENT_MEMBER_OneParam(ACompetitorRole,OnLogoff,int);
 public:
 	ACompetitorRole();
 	~ACompetitorRole();
