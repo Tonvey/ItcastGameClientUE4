@@ -46,8 +46,7 @@ void GameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
             case 2:
             {
                 //new player
-                mOnNewPlayer.Broadcast(msg->pid(), msg->username());
-                //TODO: 这样分离可能会导致其他玩家角色不能及时处理移动消息的问题
+                mOnNewPlayer.Broadcast(msg->pid(), msg->username(),msg->p());
                 mOnSyncPosition.Broadcast(msg->pid(), msg->p());
                 break;
             }
@@ -75,8 +74,7 @@ void GameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
             auto players = msg->ps();
             for (auto& p : players)
             {
-                mOnNewPlayer.Broadcast(p.pid(), p.username());
-                mOnSyncPosition.Broadcast(p.pid(), p.p());
+                mOnNewPlayer.Broadcast(p.pid(), p.username(),p.p());
             }
             break;
         }

@@ -5,12 +5,22 @@
 #include "NetworkController.h"
 #include "GameEventDispatcher.h"
 #include "CompetitorRole.h"
+#include "DataAdapter.h"
+#include "Engine/World.h"
+#include "GameFramework/Actor.h"
+#include "ConstructorHelpers.h"
 AclientGameModeBase* AclientGameModeBase::smCurrentMode=nullptr;
 AclientGameModeBase::AclientGameModeBase()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::AclientGameModeBase") );
     smCurrentMode = this;
     PrimaryActorTick.bCanEverTick = true;
+    //TODO 以下代码也可行
+    //static ConstructorHelpers::FObjectFinder<UBlueprint> PutNameHere(TEXT("Blueprint'/Game/BluePrints/Competitor.Competitor'"));  
+    //if (PutNameHere.Object)   
+    //{  
+    //    CompetitorClass = (UClass*)PutNameHere.Object->GeneratedClass;  
+    //}  
 }
 AclientGameModeBase::~AclientGameModeBase()
 {
@@ -27,6 +37,26 @@ AclientGameModeBase::~AclientGameModeBase()
         GameEventDispatcher::GetInstance().GetOnMainPlayerSync().Remove(mMainPlayerSyncHandle);
         mMainPlayerSyncHandle.Reset();
     }
+}
+ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(int _pid,
+    const FString& _name,
+    FVector _groundLocation,
+    FRotator _rotation)
+{
+    auto newRole = this->GetWorld()->SpawnActor<ACompetitorRole>(
+        CompetitorClass->GetDefaultObject()->GetClass(),
+        _groundLocation,
+        _rotation
+        );
+    if (newRole == nullptr)
+    {
+		UE_LOG(LogTemp, Error, TEXT("AclientGameModeBase::CreateAcompetitorToLevel_Implementation fail"));
+        assert(false);
+    }
+    newRole->SetPid(_pid);
+    newRole->SetPlayerName(_name);
+    newRole->SetPlayerGroundLocation(_groundLocation);
+    return newRole;
 }
 void AclientGameModeBase::Init()
 {
@@ -49,7 +79,7 @@ void AclientGameModeBase::Tick(float deltaTime)
     NetworkController::GetInstance().ProcessNetworkMessage();
 }
 
-void AclientGameModeBase::OnNewPlayer(int _pid, std::string _name)
+void AclientGameModeBase::OnNewPlayer(int _pid, std::string _name,pb::Position _pos)
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::OnNewPlayer") );
 	if (mPlayerMap.Contains(_pid))
@@ -57,7 +87,9 @@ void AclientGameModeBase::OnNewPlayer(int _pid, std::string _name)
 		UE_LOG(LogTemp, Error, TEXT("AclientGameModeBase::OnNewPlayer duplicate player"));
         return;
 	}
-    auto role = this->CreateACompetitorToLevel(_pid, UTF8_TO_TCHAR(_name.c_str()));
+    FVector location = DataAdapter::PostionSC(_pos);
+    FRotator rot = FRotator::MakeFromEuler(FVector(0, 0, _pos.v()));
+    auto role = this->CreateACompetitorToLevel(_pid, UTF8_TO_TCHAR(_name.c_str()),location,rot);
     if (role != nullptr)
     {
 		UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::OnNewPlayer pid is : %d"), role->GetPid());

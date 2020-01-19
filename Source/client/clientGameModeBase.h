@@ -19,18 +19,22 @@ class CLIENT_API AclientGameModeBase : public AGameModeBase
 public:
     AclientGameModeBase();
     ~AclientGameModeBase();
-    UFUNCTION(BlueprintImplementableEvent)
-    ACompetitorRole *CreateACompetitorToLevel(int _pid ,const FString &_name);
+    UFUNCTION(BlueprintNativeEvent)
+    ACompetitorRole *CreateACompetitorToLevel(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation);
+    ACompetitorRole *CreateACompetitorToLevel_Implementation(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation);
     UFUNCTION(BlueprintCallable, Category = "Action")
     virtual void Init();
     virtual void BeginPlay()override;
     virtual void Tick(float deltaTime) override;
-    virtual void OnNewPlayer(int _pid, std::string _name);
+    virtual void OnNewPlayer(int _pid, std::string _name,pb::Position _pos);
     virtual void OnSyncMainPlayerId(APlayerRole* mainPlayer, int _pid);
     virtual void OnPlayerLogoff(int _pid);
     virtual void RegisterPlayer(int _pid ,APlayerBase *_player);
     virtual void UnregisterPlayer(int _pid);
     static AclientGameModeBase &GetCurrentClientGameMode(){ return *smCurrentMode; }
+
+    UPROPERTY( BlueprintReadWrite )
+	TSubclassOf<ACompetitorRole> CompetitorClass;
 protected:
     TMap<int, APlayerBase*> mPlayerMap;
     static AclientGameModeBase* smCurrentMode;

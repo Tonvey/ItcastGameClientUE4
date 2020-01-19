@@ -53,7 +53,7 @@ public:
     DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnSyncPosition,int,pb::Position);
     DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnMainPlayerSync,APlayerRole *,int);
     // new player : pid , name , position
-    DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnNewPlayer,int,std::string);
+    DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher,OnNewPlayer,int,std::string,pb::Position);
     //chat : pid,name,content
     DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher, OnSyncChat,int,std::string,std::string);
 public:
