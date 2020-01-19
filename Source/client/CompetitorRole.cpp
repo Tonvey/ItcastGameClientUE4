@@ -2,6 +2,7 @@
 
 
 #include "CompetitorRole.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameEventDispatcher.h"
 #include "DataAdapter.h"
 
@@ -10,12 +11,41 @@ ACompetitorRole::ACompetitorRole()
     UE_LOG(LogTemp, Display, TEXT("ACompetitorRole::ACompetitorRole create"));
     GameEventDispatcher::GetInstance().GetOnSyncPid().AddUObject(this,&ACompetitorRole::SetPid);
     GameEventDispatcher::GetInstance().GetOnSyncPlayerName().AddUObject(this,&ACompetitorRole::SetPlayerName);
-    GameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &ACompetitorRole::SetPosition);
+    GameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &ACompetitorRole::SetPlayerGroundLocation);
     GameEventDispatcher::GetInstance().GetOnPlayerLogoff().AddUObject(this,&ACompetitorRole::OnLogoff);
+	PrimaryActorTick.bCanEverTick = true;
+
+    //TODO: 这是解决对象不运动的关键
+    auto comp = this->GetCharacterMovement();
+    comp->bRunPhysicsWithNoController = true;
 }
 
 ACompetitorRole::~ACompetitorRole()
 {
+}
+
+void ACompetitorRole::SetPlayerGroundLocation(int _pid, pb::Position _pos)
+{
+    if (_pid != mPid)
+    {
+        return;
+    }
+    auto location = DataAdapter::PostionSC(_pos);
+    this->HP = _pos.bloodvalue();
+    this->SyncGroundPositionTo(location, _pos.v());
+}
+
+void ACompetitorRole::SetPlayerGroundLocation(const FVector& _pos)
+{
+    Super::SetPlayerGroundLocation(_pos);
+}
+
+void ACompetitorRole::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+    //UE_LOG(LogTemp, Display, TEXT("ACompetitorRole::Tick"));
+    UE_LOG(LogTemp, Display, TEXT("ACompetitorRole::Tick max speed: %f"),this->GetCharacterMovement()->GetMaxSpeed());
+    this->AddMovementInput(this->GetActorForwardVector());
 }
 
 void ACompetitorRole::OnLogoff(int _pid)

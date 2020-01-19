@@ -4,13 +4,13 @@
 #include "PlayerBase.h"
 #include "GameEventDispatcher.h"
 #include "DataAdapter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 APlayerBase::APlayerBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -24,7 +24,6 @@ void APlayerBase::BeginPlay()
 void APlayerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -58,26 +57,48 @@ void APlayerBase::SetPlayerName_Implementation(const FString &_playerName)
     }
 }
 
-void APlayerBase::SetPosition(int _pid, pb::Position _pos)
+FVector APlayerBase::Ground2Pivot(const FVector ground) const
+{
+    return FVector(ground.X, ground.Y, ground.Z + this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+}
+
+FVector APlayerBase::Pivot2Ground(const FVector pivot) const
+{
+    return FVector(pivot.X, pivot.Y, pivot.Z - this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+}
+
+void APlayerBase::SetPlayerGroundLocation(const FVector &_pos)
+{
+    this->SetActorLocation(Ground2Pivot(_pos));
+}
+
+FVector APlayerBase::GetPlayerGroundLocation()const
+{
+    return Pivot2Ground(this->GetActorLocation());
+}
+
+void APlayerBase::SetDirection(float _zRot)
+{
+    FQuat rot = FQuat::MakeFromEuler(FVector(0, 0, _zRot));
+    this->SetActorRotation(rot);
+}
+
+void APlayerBase::SetPlayerGroundLocation(int _pid, pb::Position _pos)
 {
     if (_pid != mPid)
     {
         return;
     }
     auto location = DataAdapter::PostionSC(_pos);
-    UE_LOG(LogTemp, Display, TEXT("PlayerBase::SetPosition x:%f y:%f z:%f"),location.X,location.Y,location.Z);
-    FQuat locationAndDir;
-    locationAndDir.X = location.X;
-    locationAndDir.Y = location.Y;
-    locationAndDir.Z = location.Z;
-    locationAndDir.W = _pos.v();
-    this->SetPositionAndDirection(locationAndDir);
+    UE_LOG(LogTemp, Display, TEXT("PlayerBase::SetPlayerGroundLocation x:%f y:%f z:%f"),location.X,location.Y,location.Z);
+    this->SetPlayerGroundLocation(location);
+    this->SetDirection(_pos.v());
 }
 
 pb::Position APlayerBase::GetPosition() const
 {
     auto location = this->GetActorLocation();
-    location.Z -= this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+    location = this->Pivot2Ground(location);
     pb::Position pos = DataAdapter::PostionCS(location);
     auto rot = this->GetActorRotation();
     pos.set_v(rot.Vector().Z);
@@ -85,14 +106,3 @@ pb::Position APlayerBase::GetPosition() const
     return pos;
 }
 
-void APlayerBase::SetPositionAndDirection(FQuat _pos)
-{
-    FVector location;
-    location.X = _pos.X;
-    location.Y = _pos.Y;
-    location.Z = _pos.Z;
-    location.Z += this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-    this->SetActorLocation(location);
-    FQuat rot = FQuat::MakeFromEuler(FVector(0, 0, _pos.W));
-    this->SetActorRotation(rot);
-}

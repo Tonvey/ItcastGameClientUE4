@@ -43,9 +43,20 @@ public:
     UFUNCTION(BlueprintNativeEvent,Category = "Cpp_Event")
     void SetPlayerName(const FString &_playerName);
 
-    virtual void SetPosition(int _pid,pb::Position _pos);
+
+    UFUNCTION(BlueprintCallable)
+    FVector Ground2Pivot(const FVector ground)const;
+    UFUNCTION(BlueprintCallable)
+    FVector Pivot2Ground(const FVector pivot)const;
+
+    UFUNCTION(BlueprintCallable)
+    virtual void SetPlayerGroundLocation(const FVector &_pos);
+    UFUNCTION(BlueprintCallable)
+    virtual FVector GetPlayerGroundLocation()const;
+    UFUNCTION(BlueprintCallable)
+    virtual void SetDirection(float _zRot);
+    virtual void SetPlayerGroundLocation(int _pid,pb::Position _pos);
     virtual pb::Position GetPosition()const;
-    virtual void SetPositionAndDirection(FQuat _pos);
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int mPid = 0;
