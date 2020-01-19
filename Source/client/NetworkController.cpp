@@ -36,3 +36,8 @@ void NetworkController::ProcessNetworkMessage()
         }
     }
 }
+
+void NetworkController::PushMsg(TSharedPtr<GameMsg> &msg)
+{
+    mProtocol->PushMsg(msg);
+}

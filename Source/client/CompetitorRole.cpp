@@ -43,9 +43,6 @@ void ACompetitorRole::SetPlayerGroundLocation(const FVector& _pos)
 void ACompetitorRole::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    //UE_LOG(LogTemp, Display, TEXT("ACompetitorRole::Tick"));
-    UE_LOG(LogTemp, Display, TEXT("ACompetitorRole::Tick max speed: %f"),this->GetCharacterMovement()->GetMaxSpeed());
-    //this->AddMovementInput(this->GetActorForwardVector());
 }
 
 void ACompetitorRole::OnLogoff(int _pid)

@@ -70,3 +70,27 @@ TSharedPtr<GameMsg> NetProtocolResolver::ResolveMessage()
     //返回值包含多个逻辑消息的列表
     return TSharedPtr<GameMsg>(gameMsg);
 }
+
+void NetProtocolResolver::PushMsg(TSharedPtr<GameMsg> msg)
+{
+    std::string sendBuf;
+    for (auto &singlePbMsg : msg->mMsgList)
+    {
+		std::string pbBuf = singlePbMsg->mPbMsg->SerializeAsString();
+		int32 len = pbBuf.size();
+		sendBuf.push_back((char)(len & 0xff));
+		sendBuf.push_back((char)((len >> 8) & 0xff));
+		sendBuf.push_back((char)((len >> 16) & 0xff));
+		sendBuf.push_back((char)((len >> 24) & 0xff));
+		int32 msgId = (uint32)singlePbMsg->m_MsgType;
+		sendBuf.push_back((char)(msgId & 0xff));
+		sendBuf.push_back((char)((msgId >> 8) & 0xff));
+		sendBuf.push_back((char)((msgId >> 16) & 0xff));
+		sendBuf.push_back((char)((msgId >> 24) & 0xff));
+		sendBuf.append(pbBuf);
+    }
+    if (sendBuf.size() > 0)
+    {
+		mConnector->SendData(sendBuf);
+    }
+}

@@ -82,6 +82,7 @@ bool NetworkConnector::ReadData(string &data)
 void NetworkConnector::SendData(string &data)
 {
     uint8 *buf = new uint8[data.size()];
+    data.copy((char*)buf, data.size());
     int32 byteSend;
     if(!mSocket->Send(buf,data.size(),byteSend))
     {
@@ -91,6 +92,6 @@ void NetworkConnector::SendData(string &data)
     {
         UE_LOG(LogTemp, Error, TEXT("NetworkConnector::ReadData error2") );
     }
-    UE_LOG(LogTemp, Display, TEXT("send : %s\n"),Convert2Printable(data).c_str());
+    UE_LOG(LogTemp, Display, TEXT("send : %s\n"),ANSI_TO_TCHAR(Convert2Printable(data).c_str()));
     delete[] buf;
 }

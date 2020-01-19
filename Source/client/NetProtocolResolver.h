@@ -16,6 +16,7 @@ public:
 	NetProtocolResolver(TSharedPtr<NetworkConnector> &connector);
 	~NetProtocolResolver();
     virtual TSharedPtr<GameMsg> ResolveMessage();
+    virtual void PushMsg(TSharedPtr<GameMsg> msg);
 private:
     TSharedPtr<NetworkConnector> mConnector;
     std::string mLastBuf;

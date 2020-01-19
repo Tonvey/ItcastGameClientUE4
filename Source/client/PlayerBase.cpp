@@ -97,11 +97,10 @@ void APlayerBase::SetPlayerGroundLocation(int _pid, pb::Position _pos)
 
 pb::Position APlayerBase::GetPosition() const
 {
-    auto location = this->GetActorLocation();
-    location = this->Pivot2Ground(location);
+    auto location = this->GetPlayerGroundLocation();
     pb::Position pos = DataAdapter::PostionCS(location);
     auto rot = this->GetActorRotation();
-    pos.set_v(rot.Vector().Z);
+    pos.set_v(rot.Euler().Z);
     pos.set_bloodvalue(this->HP);
     return pos;
 }
