@@ -42,6 +42,15 @@ public:
     UFUNCTION(BlueprintNativeEvent,Category = "Cpp_Event")
     void SetPlayerName(const FString &_playerName);
 
+    void SetHP(int _hp);
+
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Cpp_Event")
+    void UpdateNameAndHp(const FString &_name, int32 _maxHp , int32 _hp);
+	UFUNCTION(BlueprintImplementableEvent, Category = "Cpp_Event")
+    void UpdateUIName(const FString &_name);
+	UFUNCTION(BlueprintImplementableEvent, Category = "Cpp_Event")
+    void UpdateUIHp(int32 _maxHp , int32 _hp);
 
     UFUNCTION(BlueprintCallable)
     FVector Ground2Pivot(const FVector ground)const;
@@ -63,8 +72,4 @@ protected:
     int HP = 0;
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString mPlayerName;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTextRenderComponent* mPlayerNameTextComp;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USkeletalMeshComponent* mPlayerMeshComp;
 };

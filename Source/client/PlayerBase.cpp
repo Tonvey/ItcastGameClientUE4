@@ -41,21 +41,19 @@ void APlayerBase::SetPlayerName(std::string _playerName)
 {
     mPlayerName = UTF8_TO_TCHAR(_playerName.c_str());
     this->mOnSetPlayerName.Broadcast(mPlayerName);
-    if (this->mPlayerNameTextComp != nullptr)
-    {
-		this->mPlayerNameTextComp->SetText(mPlayerName);
-    }
+    this->UpdateUIName(mPlayerName);
+}
+void APlayerBase::SetHP(int _hp)
+{
+    this->HP = _hp;
+    this->UpdateUIHp(1000,HP);
 }
 void APlayerBase::SetPlayerName_Implementation(const FString &_playerName)
 {
     mPlayerName = _playerName;
     this->mOnSetPlayerName.Broadcast(mPlayerName);
-    if (this->mPlayerNameTextComp != nullptr)
-    {
-		this->mPlayerNameTextComp->SetText(mPlayerName);
-    }
+    this->UpdateUIName(mPlayerName);
 }
-
 FVector APlayerBase::Ground2Pivot(const FVector ground) const
 {
     return FVector(ground.X, ground.Y, ground.Z + this->GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
@@ -91,6 +89,7 @@ void APlayerBase::SetPlayerGroundLocation(int _pid, pb::Position _pos)
     auto location = DataAdapter::PostionSC(_pos);
     UE_LOG(LogTemp, Display, TEXT("PlayerBase::SetPlayerGroundLocation x:%f y:%f z:%f"),location.X,location.Y,location.Z);
     this->SetPlayerGroundLocation(location);
+    this->SetHP(_pos.bloodvalue());
     this->SetDirection(_pos.v());
 }
 
