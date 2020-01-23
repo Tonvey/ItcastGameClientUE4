@@ -20,8 +20,8 @@ public:
     AclientGameModeBase();
     ~AclientGameModeBase();
     UFUNCTION(BlueprintNativeEvent)
-    ACompetitorRole *CreateACompetitorToLevel(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation);
-    ACompetitorRole *CreateACompetitorToLevel_Implementation(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation);
+    ACompetitorRole *CreateACompetitorToLevel(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation,int _hp);
+    ACompetitorRole *CreateACompetitorToLevel_Implementation(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation,int _hp);
     UFUNCTION(BlueprintCallable, Category = "Action")
     virtual void Init();
     virtual void BeginPlay()override;

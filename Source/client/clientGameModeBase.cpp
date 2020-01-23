@@ -32,7 +32,8 @@ AclientGameModeBase::~AclientGameModeBase()
 ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(int _pid,
     const FString& _name,
     FVector _groundLocation,
-    FRotator _rotation)
+    FRotator _rotation,
+    int _hp)
 {
     auto newRole = this->GetWorld()->SpawnActor<ACompetitorRole>(
         CompetitorClass->GetDefaultObject()->GetClass(),
@@ -46,6 +47,7 @@ ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(in
     }
     newRole->SetPid(_pid);
     newRole->SetPlayerName(_name);
+    newRole->SetHP(_hp);
     newRole->SetPlayerGroundLocation(_groundLocation);
     newRole->GetOnLogoff().AddUObject(this, &AclientGameModeBase::OnPlayerLogoff);
     return newRole;
@@ -80,7 +82,7 @@ void AclientGameModeBase::OnNewPlayer(int _pid, std::string _name,pb::Position _
 	}
     FVector location = DataAdapter::PostionSC(_pos);
     FRotator rot = FRotator::MakeFromEuler(FVector(0, 0, _pos.v()));
-    auto role = this->CreateACompetitorToLevel(_pid, UTF8_TO_TCHAR(_name.c_str()),location,rot);
+    auto role = this->CreateACompetitorToLevel(_pid, UTF8_TO_TCHAR(_name.c_str()), location, rot,_pos.bloodvalue());
     if (role != nullptr)
     {
 		UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::OnNewPlayer pid is : %d"), role->GetPid());

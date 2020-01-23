@@ -31,7 +31,7 @@ void ACompetitorRole::SetPlayerGroundLocation(int _pid, pb::Position _pos)
         return;
     }
     auto location = DataAdapter::PostionSC(_pos);
-    this->HP = _pos.bloodvalue();
+    this->SetHP(_pos.bloodvalue());
     this->SyncGroundPositionTo(location, _pos.v());
 }
 
