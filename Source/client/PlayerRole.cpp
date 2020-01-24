@@ -48,9 +48,9 @@ void APlayerRole::Tick(float DeltaTime)
 TSharedPtr<GameMsg> APlayerRole::MakeSyncPosition() const
 {
     TSharedPtr<GameMsg> ret(new GameMsg);
-    auto singleMsg = new GameSingleTLV(
+    TSharedPtr<GameSingleTLV> singleMsg(new GameSingleTLV(
         GameMsgID_t::GAME_MSG_NEW_POSTION,
-        new pb::Position(this->GetPosition()));
+        new pb::Position(this->GetPosition())));
     ret->mMsgList.push_back(singleMsg);
     return ret;
 }

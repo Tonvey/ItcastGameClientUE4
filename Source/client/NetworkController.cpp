@@ -4,6 +4,7 @@
 #include "NetworkController.h"
 
 NetworkController::NetworkController()
+    :isPaused(false)
 {
 }
 
@@ -27,13 +28,27 @@ void NetworkController::Reset()
 }
 void NetworkController::ProcessNetworkMessage()
 {
-    auto msg = mProtocol->ResolveMessage();
-    if(msg)
+    if (!mLastMessages.IsValid())
     {
-        for(auto tlv : msg->mMsgList)
+		mLastMessages = mProtocol->ResolveMessage();
+    }
+    if (!mLastMessages.IsValid())
+    {
+        return;
+    }
+    while (mLastMessages->mMsgList.size()>0)
+    {
+        if (isPaused)
         {
-            OnNewGameMessage.Broadcast(tlv->m_MsgType,tlv->mPbMsg);
+            break;
         }
+        auto tlv = mLastMessages->mMsgList.front();
+        mLastMessages->mMsgList.pop_front();
+		OnNewGameMessage.Broadcast(tlv->m_MsgType, tlv->mPbMsg);
+    }
+    if (mLastMessages->mMsgList.size() == 0)
+    {
+        mLastMessages.Reset();
     }
 }
 
@@ -41,3 +56,14 @@ void NetworkController::PushMsg(TSharedPtr<GameMsg> &msg)
 {
     mProtocol->PushMsg(msg);
 }
+
+void NetworkController::PauseProcessMessage()
+{
+    isPaused = true;
+}
+
+void NetworkController::ResumeProcessMessage()
+{
+    isPaused = false;
+}
+

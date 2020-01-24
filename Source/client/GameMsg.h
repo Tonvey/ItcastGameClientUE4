@@ -45,5 +45,5 @@ class CLIENT_API GameMsg
 public:
     GameMsg();
     virtual ~GameMsg();
-    std::list<GameSingleTLV*> mMsgList;
+    std::list<TSharedPtr<GameSingleTLV>> mMsgList;
 };

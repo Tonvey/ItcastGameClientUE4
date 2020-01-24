@@ -22,21 +22,32 @@ public:
     UFUNCTION(BlueprintNativeEvent)
     ACompetitorRole *CreateACompetitorToLevel(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation,int _hp);
     ACompetitorRole *CreateACompetitorToLevel_Implementation(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation,int _hp);
+    UFUNCTION(BlueprintImplementableEvent)
+    void ChangeWorld(int _srcId ,int _targetId);
     UFUNCTION(BlueprintCallable, Category = "Action")
     virtual void Init();
     virtual void BeginPlay()override;
     virtual void Tick(float deltaTime) override;
     virtual void OnNewPlayer(int _pid, std::string _name,pb::Position _pos);
     virtual void OnSyncMainPlayerId(APlayerRole* mainPlayer, int _pid);
+    virtual void OnChangeWorld(int _srcId, int _targetId, int _res);
     virtual void OnPlayerLogoff(int _pid);
     virtual void RegisterPlayer(int _pid ,APlayerBase *_player);
     virtual void UnregisterPlayer(int _pid);
     static AclientGameModeBase &GetCurrentClientGameMode(){ return *smCurrentMode; }
 
+	UFUNCTION(BlueprintCallable)
+    void RequestChangeWorld(int _pid,int _target);
     UPROPERTY( BlueprintReadWrite )
 	TSubclassOf<ACompetitorRole> CompetitorClass;
+    UPROPERTY( BlueprintReadOnly )
+    APlayerRole *mMainPlayer;
+
+private:
+	TSharedPtr<GameMsg> MakeChangeWorldRequest(int _pid, int _src,int _target);
 protected:
     TMap<int, APlayerBase*> mPlayerMap;
     static AclientGameModeBase* smCurrentMode;
-    APlayerRole *mMainPlayer;
+    UPROPERTY(BlueprintReadWrite)
+	int mWorldId;
 };

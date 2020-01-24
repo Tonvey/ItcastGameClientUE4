@@ -22,8 +22,12 @@ public:
     virtual void PushMsg(TSharedPtr<GameMsg> &msg);
     DECLARE_EVENT_TwoParams(NetworkController, NewGameMessage,GameSingleTLV::ENUM_GameMsgID,::google::protobuf::Message*);
     virtual NewGameMessage &GetOnNewMessage(){return OnNewGameMessage;};
+    virtual void PauseProcessMessage();
+    virtual void ResumeProcessMessage();
 private:
     TSharedPtr<NetworkConnector> mConnector;
     TSharedPtr<NetProtocolResolver> mProtocol;
     NewGameMessage OnNewGameMessage;
+    bool isPaused;
+    TSharedPtr<GameMsg> mLastMessages;
 };

@@ -2,6 +2,7 @@
 
 
 #include "MagicGate.h"
+#include "NetworkController.h"
 
 // Sets default values
 AMagicGate::AMagicGate()

@@ -88,6 +88,11 @@ void GameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
         }
     case GameMsgID_t::GAME_MSG_CHANGE_WORLD_RESPONSE:
         {
+            auto msg = static_cast<pb::ChangeWorldResponse*>(_msg);
+            int srcid = msg->srcid();
+            int targetid = msg->targetid();
+            int res = msg->changeres();
+            mOnChangeWorld.Broadcast(srcid, targetid, res);
             break;
         }
     default:

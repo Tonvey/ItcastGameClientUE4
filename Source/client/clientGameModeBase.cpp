@@ -60,6 +60,7 @@ void AclientGameModeBase::Init()
     GameEventDispatcher::GetInstance().Init();
     GameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
     GameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
+    GameEventDispatcher::GetInstance().GetOnChangeWorld().AddUObject(this, &AclientGameModeBase::OnChangeWorld);
 }
 void AclientGameModeBase::BeginPlay()
 {
@@ -106,6 +107,14 @@ void AclientGameModeBase::OnSyncMainPlayerId(APlayerRole *mainPlayer , int _pid)
         this->RegisterPlayer(_pid, mainPlayer);
     }
 }
+void AclientGameModeBase::OnChangeWorld(int _srcId, int _targetId, int _res)
+{
+    if (_res == 1)
+    {
+        NetworkController::GetInstance().PauseProcessMessage();
+        this->ChangeWorld(_srcId, _targetId);
+    }
+}
 void AclientGameModeBase::OnPlayerLogoff(int _pid)
 {
     this->UnregisterPlayer(_pid);
@@ -124,5 +133,25 @@ void AclientGameModeBase::RegisterPlayer(int _pid, APlayerBase* _player)
 void AclientGameModeBase::UnregisterPlayer(int _pid)
 {
     mPlayerMap.Remove(_pid);
+}
+
+void AclientGameModeBase::RequestChangeWorld(int _pid, int _target)
+{
+    auto msg = MakeChangeWorldRequest(_pid, this->mWorldId, _target);
+    NetworkController::GetInstance().PushMsg(msg);
+}
+
+TSharedPtr<GameMsg> AclientGameModeBase::MakeChangeWorldRequest(int _pid, int _src,int _target)
+{
+    TSharedPtr<GameMsg> ret(new GameMsg);
+    auto pbMsg = new pb::ChangeWorldRequest;
+    pbMsg->set_pid(_pid);
+    pbMsg->set_srcid(_src);
+    pbMsg->set_targetid(_target);
+    TSharedPtr<GameSingleTLV> singleMsg(new GameSingleTLV(
+        GameMsgID_t::GAME_MSG_CHANGE_WORLD,
+        pbMsg));
+    ret->mMsgList.push_back(singleMsg);
+    return ret;
 }
 

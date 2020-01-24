@@ -48,7 +48,7 @@ TSharedPtr<GameMsg> NetProtocolResolver::ResolveMessage()
             //buf要清理掉这个报文
             mLastBuf.erase(0, 8 + len);
             //产生一个SingletTLV
-            auto msg = new GameSingleTLV((GameSingleTLV::ENUM_GameMsgID)msgType, msgContent);
+            TSharedPtr<GameSingleTLV> msg(new GameSingleTLV((GameSingleTLV::ENUM_GameMsgID)msgType, msgContent));
             if(msg->mPbMsg==nullptr)
             {
                 continue;

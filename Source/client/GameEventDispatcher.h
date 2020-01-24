@@ -56,6 +56,9 @@ public:
     DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher,OnNewPlayer,int,std::string,pb::Position);
     //chat : pid,name,content
     DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher, OnSyncChat,int,std::string,std::string);
+
+    //srcid , target world id , res
+    DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher, OnChangeWorld,int,int,int);
 public:
     //DECLARE_DELEGATE_OneParam(SingleGameMsgDelegate,GameMsg_t*);
     //typedef TArray<TArray<SingleGameMsgDelegate>> GameMsgMap_t;

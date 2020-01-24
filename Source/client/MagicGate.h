@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameMsg.h"
 #include "MagicGate.generated.h"
 
 UCLASS()
