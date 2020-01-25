@@ -21,6 +21,7 @@ void NetworkController::Finish()
 {
     mConnector =decltype(mConnector)();
     mProtocol= decltype(mProtocol)();
+    isPaused = false;
 }
 void NetworkController::Reset()
 {
