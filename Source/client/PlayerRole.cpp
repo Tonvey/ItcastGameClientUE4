@@ -5,6 +5,7 @@
 #include "GameEventDispatcher.h"
 #include "GameFramework/Controller.h"
 #include "DataAdapter.h"
+#include "NetworkMessageFactoryUtil.h"
 
 APlayerRole::APlayerRole()
     :mLastPositionSyncInterval(0.0f)
@@ -37,21 +38,12 @@ void APlayerRole::Tick(float DeltaTime)
        newPos.W = newPb.v();
        if (newPos != mLastSyncPosition)
        {
-		   auto msg = MakeSyncPosition();
+           auto pbPos = this->GetPosition();
+           auto msg = UNetworkMessageFactoryUtil::MakeSyncPosition(pbPos);
 		   NetworkController::GetInstance().PushMsg(msg);
 		   mLastPositionSyncInterval = 0.0f;
            mLastSyncPosition = newPos;
        }
    }
-}
-
-TSharedPtr<GameMsg> APlayerRole::MakeSyncPosition() const
-{
-    TSharedPtr<GameMsg> ret(new GameMsg);
-    TSharedPtr<GameSingleTLV> singleMsg(new GameSingleTLV(
-        GameMsgID_t::GAME_MSG_NEW_POSTION,
-        new pb::Position(this->GetPosition())));
-    ret->mMsgList.push_back(singleMsg);
-    return ret;
 }
 

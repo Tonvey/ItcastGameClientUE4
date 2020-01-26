@@ -19,7 +19,8 @@ public:
     virtual void Finish();
     virtual void Reset();
     virtual void ProcessNetworkMessage();
-    virtual void PushMsg(TSharedPtr<GameMsg> &msg);
+    virtual void PushMsg(GameMsgArray_t &msg);
+    virtual void PushMsg(GameSingleTLV &msg);
     DECLARE_EVENT_TwoParams(NetworkController, NewGameMessage,GameSingleTLV::ENUM_GameMsgID,::google::protobuf::Message*);
     virtual NewGameMessage &GetOnNewMessage(){return OnNewGameMessage;};
     virtual void PauseProcessMessage();
@@ -29,5 +30,5 @@ private:
     TSharedPtr<NetProtocolResolver> mProtocol;
     NewGameMessage OnNewGameMessage;
     bool isPaused;
-    TSharedPtr<GameMsg> mLastMessages;
+    GameMsgArray_t mLastMessages;
 };

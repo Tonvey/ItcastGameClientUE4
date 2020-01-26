@@ -44,7 +44,6 @@ public:
 
     void SetHP(int _hp);
 
-
 	UFUNCTION(BlueprintImplementableEvent, Category = "Cpp_Event")
     void UpdateNameAndHp(const FString &_name, int32 _maxHp , int32 _hp);
 	UFUNCTION(BlueprintImplementableEvent, Category = "Cpp_Event")

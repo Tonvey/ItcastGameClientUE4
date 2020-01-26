@@ -1,35 +1,22 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GameMsg.h"
 
-GameMsg::GameMsg()
-{
-}
-
-GameMsg::~GameMsg()
-{
-}
 std::string GameSingleTLV::serialize()
 {
     std::string out;
-    if (mPbMsg != nullptr)
+    if (mPbMsg.IsValid())
     {
         out = mPbMsg->SerializeAsString();
     }
     return out;
 }
-
-GameSingleTLV::~GameSingleTLV()
+GameSingleTLV::GameSingleTLV(GameSingleTLV&& other)
 {
-    //做到对对象的释放
-    if (mPbMsg != nullptr)
-    {
-        delete mPbMsg;
-    }
+    this->m_MsgType = other.m_MsgType;
+    this->mPbMsg = std::move(other.mPbMsg);
 }
 
-GameSingleTLV::GameSingleTLV(GameMsgID_t type, std::string content)
+GameSingleTLV::GameSingleTLV(ENUM_GameMsgID type, std::string content)
     :m_MsgType(type)
 {
 
@@ -38,69 +25,69 @@ GameSingleTLV::GameSingleTLV(GameMsgID_t type, std::string content)
     {
     case GAME_MSG_LOGON_SYNCPID:
         {
-            mPbMsg = new pb::SyncPid;
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::SyncPid);
             break;
         }
     case GAME_MSG_TALK_CONTENT:
         {
-            mPbMsg = new pb::Talk;
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::Talk);
             break;
         }
     case GAME_MSG_NEW_POSTION:
         {
-            mPbMsg = new pb::Position;
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::Position);
             break;
         }
     case GAME_MSG_SKILL_TRIGGER:
         {
-            mPbMsg = new pb::SkillTrigger();
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::SkillTrigger());
             break;
         }
     case GAME_MSG_SKILL_CONTACT:
         {
-            mPbMsg = new pb::SkillContact();
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::SkillContact());
             break;
         }
     case GAME_MSG_CHANGE_WORLD:
         {
-            mPbMsg = new pb::ChangeWorldRequest();
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::ChangeWorldRequest());
             break;
         }
     case GAME_MSG_BROADCAST:
         {
-            mPbMsg = new pb::BroadCast;
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::BroadCast);
             break;
         }
     case GAME_MSG_LOGOFF_SYNCPID:
         {
-            mPbMsg = new pb::SyncPid;
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::SyncPid);
             break;
         }
     case GAME_MSG_SUR_PLAYER:
         {
-            mPbMsg = new pb::SyncPlayers;
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::SyncPlayers);
             break;
         }
     case GAME_MSG_SKILL_BROAD:
         {
-            mPbMsg = new pb::SkillTrigger;
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::SkillTrigger);
             break;
         }
     case GAME_MSG_SKILL_CONTACT_BROAD:
         {
-            mPbMsg = new pb::SkillContact;
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::SkillContact);
             break;
         }
     case GAME_MSG_CHANGE_WORLD_RESPONSE:
         {
-            mPbMsg = new pb::ChangeWorldResponse;
+            mPbMsg = TSharedPtr<::google::protobuf::Message>(new pb::ChangeWorldResponse);
             break;
         }
     default:
         break;
     }
     //反序列化
-    if(mPbMsg!=nullptr)
+    if(mPbMsg.IsValid())
     {
         mPbMsg->ParseFromString(content);
     }

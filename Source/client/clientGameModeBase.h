@@ -43,8 +43,6 @@ public:
     UPROPERTY( BlueprintReadOnly )
     APlayerRole *mMainPlayer;
 
-private:
-	TSharedPtr<GameMsg> MakeChangeWorldRequest(int _pid, int _src,int _target);
 protected:
     TMap<int, APlayerBase*> mPlayerMap;
     static AclientGameModeBase* smCurrentMode;

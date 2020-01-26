@@ -29,31 +29,32 @@ void NetworkController::Reset()
 }
 void NetworkController::ProcessNetworkMessage()
 {
-    if (!mLastMessages.IsValid())
+    if (mLastMessages.size()==0)
     {
 		mLastMessages = mProtocol->ResolveMessage();
     }
-    if (!mLastMessages.IsValid())
+    if (mLastMessages.size()==0)
     {
         return;
     }
-    while (mLastMessages->mMsgList.size()>0)
+    while (mLastMessages.size()>0)
     {
         if (isPaused)
         {
             break;
         }
-        auto tlv = mLastMessages->mMsgList.front();
-        mLastMessages->mMsgList.pop_front();
-		OnNewGameMessage.Broadcast(tlv->m_MsgType, tlv->mPbMsg);
-    }
-    if (mLastMessages->mMsgList.size() == 0)
-    {
-        mLastMessages.Reset();
+        auto tlv = mLastMessages.front();
+        mLastMessages.pop_front();
+		OnNewGameMessage.Broadcast(tlv.m_MsgType, tlv.mPbMsg.Get());
     }
 }
 
-void NetworkController::PushMsg(TSharedPtr<GameMsg> &msg)
+void NetworkController::PushMsg(GameMsgArray_t &msg)
+{
+    mProtocol->PushMsg(msg);
+}
+
+void NetworkController::PushMsg(GameSingleTLV& msg)
 {
     mProtocol->PushMsg(msg);
 }

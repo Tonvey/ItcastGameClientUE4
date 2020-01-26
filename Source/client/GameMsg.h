@@ -28,22 +28,15 @@ public:
     } m_MsgType;
 
     //定义一个父类对象的指针,用来存储不同类型的子类
-    ::google::protobuf::Message *mPbMsg;
+    TSharedPtr<::google::protobuf::Message> mPbMsg;
 
     std::string serialize();
 
-    ~GameSingleTLV();
+    GameSingleTLV(GameSingleTLV &&other);
+    GameSingleTLV(const GameSingleTLV &other) = default;
     GameSingleTLV(ENUM_GameMsgID type, std::string content);
     GameSingleTLV(ENUM_GameMsgID type, ::google::protobuf::Message *pbmsg) :m_MsgType(type), mPbMsg(pbmsg) {}
 };
 typedef GameSingleTLV::ENUM_GameMsgID GameMsgID_t;
-/**
- * 
- */
-class CLIENT_API GameMsg
-{
-public:
-    GameMsg();
-    virtual ~GameMsg();
-    std::list<TSharedPtr<GameSingleTLV>> mMsgList;
-};
+typedef std::list<GameSingleTLV> GameMsgArray_t;
+

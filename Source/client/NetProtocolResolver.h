@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "NetworkConnector.h"
-#include <string>
 #include "GameMsg.h"
 
 /**
@@ -15,8 +14,10 @@ class CLIENT_API NetProtocolResolver
 public:
 	NetProtocolResolver(TSharedPtr<NetworkConnector> &connector);
 	~NetProtocolResolver();
-    virtual TSharedPtr<GameMsg> ResolveMessage();
-    virtual void PushMsg(TSharedPtr<GameMsg> msg);
+    virtual GameMsgArray_t ResolveMessage();
+    virtual void PushMsg(GameMsgArray_t &msg);
+    virtual void PushMsg(GameSingleTLV &msg);
+    static void AppendMessageToString(GameSingleTLV& singlePbMsg, std::string& dest);
 private:
     TSharedPtr<NetworkConnector> mConnector;
     std::string mLastBuf;

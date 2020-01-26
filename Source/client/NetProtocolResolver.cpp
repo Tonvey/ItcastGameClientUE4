@@ -15,15 +15,15 @@ NetProtocolResolver::~NetProtocolResolver()
 {
 }
 
-TSharedPtr<GameMsg> NetProtocolResolver::ResolveMessage()
+GameMsgArray_t NetProtocolResolver::ResolveMessage()
 {
     string _szInput;
+    GameMsgArray_t gameMsg;
     if(!mConnector->ReadData(_szInput)||_szInput.size()==0)
     {
-        return nullptr;
+        return gameMsg;
     }
     mLastBuf.append(_szInput);
-    GameMsg *gameMsg = nullptr;
     //数据长度至少要大于8才做处理
     while (mLastBuf.size() >= 8)
     {
@@ -48,18 +48,15 @@ TSharedPtr<GameMsg> NetProtocolResolver::ResolveMessage()
             //buf要清理掉这个报文
             mLastBuf.erase(0, 8 + len);
             //产生一个SingletTLV
-            TSharedPtr<GameSingleTLV> msg(new GameSingleTLV((GameSingleTLV::ENUM_GameMsgID)msgType, msgContent));
-            if(msg->mPbMsg==nullptr)
+            GameSingleTLV msg((GameSingleTLV::ENUM_GameMsgID)msgType, msgContent);
+            if(msg.mPbMsg.IsValid())
             {
-                continue;
+				gameMsg.push_back(msg);
             }
-
-            if (gameMsg == nullptr)
+            else
             {
-                gameMsg = new GameMsg;
+				UE_LOG(LogTemp, Error, TEXT("Process message error"));
             }
-            //将singletlv加到GameMsg
-            gameMsg->mMsgList.push_back(msg);
         }
         else
         {
@@ -68,27 +65,41 @@ TSharedPtr<GameMsg> NetProtocolResolver::ResolveMessage()
         }
     }
     //返回值包含多个逻辑消息的列表
-    return TSharedPtr<GameMsg>(gameMsg);
+    return gameMsg;
 }
 
-void NetProtocolResolver::PushMsg(TSharedPtr<GameMsg> msg)
+void NetProtocolResolver::PushMsg(GameMsgArray_t &msg)
 {
     std::string sendBuf;
-    for (auto &singlePbMsg : msg->mMsgList)
+    for (auto &singlePbMsg : msg)
     {
-		std::string pbBuf = singlePbMsg->mPbMsg->SerializeAsString();
-		int32 len = pbBuf.size();
-		sendBuf.push_back((char)(len & 0xff));
-		sendBuf.push_back((char)((len >> 8) & 0xff));
-		sendBuf.push_back((char)((len >> 16) & 0xff));
-		sendBuf.push_back((char)((len >> 24) & 0xff));
-		int32 msgId = (uint32)singlePbMsg->m_MsgType;
-		sendBuf.push_back((char)(msgId & 0xff));
-		sendBuf.push_back((char)((msgId >> 8) & 0xff));
-		sendBuf.push_back((char)((msgId >> 16) & 0xff));
-		sendBuf.push_back((char)((msgId >> 24) & 0xff));
-		sendBuf.append(pbBuf);
+        AppendMessageToString(singlePbMsg, sendBuf);
     }
+    if (sendBuf.size() > 0)
+    {
+		mConnector->SendData(sendBuf);
+    }
+}
+
+void NetProtocolResolver::AppendMessageToString(GameSingleTLV &singlePbMsg,std::string &dest)
+{
+	std::string pbBuf = singlePbMsg.mPbMsg->SerializeAsString();
+	int32 len = pbBuf.size();
+	dest.push_back((char)(len & 0xff));
+	dest.push_back((char)((len >> 8) & 0xff));
+	dest.push_back((char)((len >> 16) & 0xff));
+	dest.push_back((char)((len >> 24) & 0xff));
+	int32 msgId = (uint32)singlePbMsg.m_MsgType;
+	dest.push_back((char)(msgId & 0xff));
+	dest.push_back((char)((msgId >> 8) & 0xff));
+	dest.push_back((char)((msgId >> 16) & 0xff));
+	dest.push_back((char)((msgId >> 24) & 0xff));
+	dest.append(pbBuf);
+}
+void NetProtocolResolver::PushMsg(GameSingleTLV& msg)
+{
+    std::string sendBuf;
+    AppendMessageToString(msg, sendBuf);
     if (sendBuf.size() > 0)
     {
 		mConnector->SendData(sendBuf);

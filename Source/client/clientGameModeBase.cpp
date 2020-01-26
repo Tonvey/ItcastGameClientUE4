@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "ConstructorHelpers.h"
+#include "NetworkMessageFactoryUtil.h"
 AclientGameModeBase* AclientGameModeBase::smCurrentMode=nullptr;
 AclientGameModeBase::AclientGameModeBase()
 {
@@ -56,7 +57,6 @@ void AclientGameModeBase::Init()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::Init") );
     NetworkController::GetInstance().Init(TEXT("127.0.0.1"),8899);
-    UE_LOG(LogTemp, Display, TEXT("hahahahaha") );
     GameEventDispatcher::GetInstance().Init();
     GameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
     GameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
@@ -137,21 +137,7 @@ void AclientGameModeBase::UnregisterPlayer(int _pid)
 
 void AclientGameModeBase::RequestChangeWorld(int _pid, int _target)
 {
-    auto msg = MakeChangeWorldRequest(_pid, this->mWorldId, _target);
+    auto msg = UNetworkMessageFactoryUtil::MakeChangeWorldRequest(_pid, this->mWorldId, _target);
     NetworkController::GetInstance().PushMsg(msg);
-}
-
-TSharedPtr<GameMsg> AclientGameModeBase::MakeChangeWorldRequest(int _pid, int _src,int _target)
-{
-    TSharedPtr<GameMsg> ret(new GameMsg);
-    auto pbMsg = new pb::ChangeWorldRequest;
-    pbMsg->set_pid(_pid);
-    pbMsg->set_srcid(_src);
-    pbMsg->set_targetid(_target);
-    TSharedPtr<GameSingleTLV> singleMsg(new GameSingleTLV(
-        GameMsgID_t::GAME_MSG_CHANGE_WORLD,
-        pbMsg));
-    ret->mMsgList.push_back(singleMsg);
-    return ret;
 }
 

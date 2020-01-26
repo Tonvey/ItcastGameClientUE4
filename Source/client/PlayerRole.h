@@ -19,7 +19,6 @@ public:
     ~APlayerRole();
     virtual void SetPid(int _pid) override;
     virtual void Tick(float DeltaTime) override;
-    virtual TSharedPtr<GameMsg> MakeSyncPosition() const;
 private:
     float mLastPositionSyncInterval;
     FVector4 mLastSyncPosition;
