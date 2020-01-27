@@ -2,25 +2,31 @@
 
 
 #include "GameEventDispatcher.h"
+#include "GameSingletonManager.h"
 using namespace std;
 
-GameEventDispatcher::GameEventDispatcher()
+UGameEventDispatcher &UGameEventDispatcher::GetInstance()
 {
-    UE_LOG(LogTemp, Display, TEXT("GameEventDispatcher::GameEventDispatcher"));
+    auto ret = UGameSingletonManager::GetInstance()->GetGameEventDispatcher();
+    return *ret;
+}
+UGameEventDispatcher::UGameEventDispatcher()
+{
+    UE_LOG(LogTemp, Display, TEXT("UGameEventDispatcher::UGameEventDispatcher"));
 }
 
-GameEventDispatcher::~GameEventDispatcher()
+UGameEventDispatcher::~UGameEventDispatcher()
 {
-    UE_LOG(LogTemp, Display, TEXT("GameEventDispatcher::~GameEventDispatcher"));
+    UE_LOG(LogTemp, Display, TEXT("UGameEventDispatcher::~UGameEventDispatcher"));
 }
 
-void GameEventDispatcher::Init()
+void UGameEventDispatcher::Init()
 {
-    UNetworkController::GetInstance().GetOnNewMessage().AddRaw(this,&GameEventDispatcher::OnNewGameMessage);
+    UNetworkController::GetInstance().GetOnNewMessage().AddUObject(this,&UGameEventDispatcher::OnNewGameMessage);
 }
-void GameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
+void UGameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
 {
-    UE_LOG(LogTemp, Display, TEXT("GameEventDispatcher::OnNewGameMessage %d "), type );
+    UE_LOG(LogTemp, Display, TEXT("UGameEventDispatcher::OnNewGameMessage %d "), type );
     switch(type)
     {
     case GameMsgID_t::GAME_MSG_LOGON_SYNCPID:
@@ -102,7 +108,7 @@ void GameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
     }
 }
 
-void GameEventDispatcher::Reset()
+void UGameEventDispatcher::Reset()
 {
     mOnSyncPid.Clear();
 	mOnSyncPlayerName.Clear();
@@ -113,7 +119,7 @@ void GameEventDispatcher::Reset()
     mOnSyncChat.Clear();
 }
 
-//void GameEventDispatcher::Register(GameMsgID_t id,SingleGameMsgDelegate &callback)
+//void UGameEventDispatcher::Register(GameMsgID_t id,SingleGameMsgDelegate &callback)
 //{
 //    int idx = int(id);
 //    if(idx>mGameMsgMap.Num())
@@ -122,6 +128,6 @@ void GameEventDispatcher::Reset()
 //    }
 //    mGameMsgMap[idx].Add(callback);
 //}
-//void GameEventDispatcher::Unregister(GameMsgID_t id)
+//void UGameEventDispatcher::Unregister(GameMsgID_t id)
 //{
 //}

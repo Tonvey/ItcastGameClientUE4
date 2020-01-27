@@ -19,6 +19,7 @@ public:
     ~APlayerRole();
     virtual void SetPid(int _pid) override;
     virtual void Tick(float DeltaTime) override;
+    virtual void Init()override;
 private:
     float mLastPositionSyncInterval;
     FVector4 mLastSyncPosition;

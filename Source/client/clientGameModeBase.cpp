@@ -27,7 +27,7 @@ AclientGameModeBase::~AclientGameModeBase()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::~AclientGameModeBase") );
     UNetworkController::GetInstance().Reset();
-    GameEventDispatcher::GetInstance().Reset();
+    UGameEventDispatcher::GetInstance().Reset();
     mPlayerMap.Reset();
 }
 ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(int _pid,
@@ -57,10 +57,10 @@ void AclientGameModeBase::Init()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::Init") );
     UNetworkController::GetInstance().Init(TEXT("127.0.0.1"),8899);
-    GameEventDispatcher::GetInstance().Init();
-    GameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
-    GameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
-    GameEventDispatcher::GetInstance().GetOnChangeWorld().AddUObject(this, &AclientGameModeBase::OnChangeWorld);
+    UGameEventDispatcher::GetInstance().Init();
+    UGameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
+    UGameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
+    UGameEventDispatcher::GetInstance().GetOnChangeWorld().AddUObject(this, &AclientGameModeBase::OnChangeWorld);
 }
 void AclientGameModeBase::BeginPlay()
 {

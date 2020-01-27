@@ -19,6 +19,7 @@ public:
 	ACompetitorRole();
 	~ACompetitorRole();
 	void OnLogoff(int _pid);
+    virtual void Init()override;
     virtual void SetPlayerGroundLocation(int _pid,pb::Position _pos) override;
     virtual void SetPlayerGroundLocation(const FVector &_pos)override;
 	UFUNCTION(BlueprintImplementableEvent, Category = "Cpp_Event")

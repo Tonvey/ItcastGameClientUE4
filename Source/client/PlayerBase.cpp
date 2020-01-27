@@ -17,7 +17,7 @@ APlayerBase::APlayerBase()
 void APlayerBase::BeginPlay()
 {
 	Super::BeginPlay();
-    GameEventDispatcher::GetInstance();
+    this->Init();
 }
 
 // Called every frame
@@ -31,6 +31,10 @@ void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void APlayerBase::Init()
+{
 }
 
 void APlayerBase::SetPid(int _pid)

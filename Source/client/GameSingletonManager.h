@@ -27,10 +27,19 @@ public:
 		}
 		return networkController;
 	}
+	UGameEventDispatcher *GetGameEventDispatcher()
+	{
+		if (gameEventDispatcher == nullptr)
+		{
+			gameEventDispatcher = NewObject<UGameEventDispatcher>();
+		}
+		return gameEventDispatcher;
+	}
 private:
 	UPROPERTY()
 	UNetworkController *networkController;
-	//GameEventDispatcher *gameEventDispatcher;
+	UPROPERTY()
+	UGameEventDispatcher *gameEventDispatcher;
 private:
 	static UGameSingletonManager* smInstance;
 };

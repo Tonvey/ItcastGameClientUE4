@@ -33,6 +33,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
     UFUNCTION(BlueprintCallable)
+    virtual void Init();   //TODO : 继承自UObject 的类都必须可以实例化，所以不能有纯虚函数
+    //TODO : init 有助于构造分离，如果将一堆工作都放在对象构造上，会在场景初期各个对象构造同时进行又同时依赖而出现冲突
+    UFUNCTION(BlueprintCallable)
     virtual void SetPid(int _pid);
     int GetPid()const { return mPid; }
 

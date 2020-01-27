@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "NetworkController.h"
 #include "GameMsg.h"
-#include "Singleton.hpp"
+#include "GameEventDispatcher.generated.h"
 
 class APlayerRole;
 #define DECLARE_EVENT_MEMBER_INSTANCE(ev_name) \
@@ -43,22 +43,24 @@ public:\
 /**
  *
  */
-class CLIENT_API GameEventDispatcher : public Singleton<GameEventDispatcher>
+UCLASS(BlueprintType)
+class CLIENT_API UGameEventDispatcher : public UObject
 {
+	GENERATED_BODY()
 public:
-    friend Singleton<GameEventDispatcher>;
-    DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnSyncPid,int);
-    DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnSyncPlayerName,std::string);
-    DECLARE_MY_EVENT_MEMBER_OneParam(GameEventDispatcher,OnPlayerLogoff,int);
-    DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnSyncPosition,int,pb::Position);
-    DECLARE_MY_EVENT_MEMBER_TwoParams(GameEventDispatcher,OnMainPlayerSync,APlayerRole *,int);
+    static UGameEventDispatcher &GetInstance();
+    DECLARE_MY_EVENT_MEMBER_OneParam(UGameEventDispatcher,OnSyncPid,int);
+    DECLARE_MY_EVENT_MEMBER_OneParam(UGameEventDispatcher,OnSyncPlayerName,std::string);
+    DECLARE_MY_EVENT_MEMBER_OneParam(UGameEventDispatcher,OnPlayerLogoff,int);
+    DECLARE_MY_EVENT_MEMBER_TwoParams(UGameEventDispatcher,OnSyncPosition,int,pb::Position);
+    DECLARE_MY_EVENT_MEMBER_TwoParams(UGameEventDispatcher,OnMainPlayerSync,APlayerRole *,int);
     // new player : pid , name , position
-    DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher,OnNewPlayer,int,std::string,pb::Position);
+    DECLARE_MY_EVENT_MEMBER_ThreeParams(UGameEventDispatcher,OnNewPlayer,int,std::string,pb::Position);
     //chat : pid,name,content
-    DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher, OnSyncChat,int,std::string,std::string);
+    DECLARE_MY_EVENT_MEMBER_ThreeParams(UGameEventDispatcher, OnSyncChat,int,std::string,std::string);
 
     //srcid , target world id , res
-    DECLARE_MY_EVENT_MEMBER_ThreeParams(GameEventDispatcher, OnChangeWorld,int,int,int);
+    DECLARE_MY_EVENT_MEMBER_ThreeParams(UGameEventDispatcher, OnChangeWorld,int,int,int);
 public:
     //DECLARE_DELEGATE_OneParam(SingleGameMsgDelegate,GameMsg_t*);
     //typedef TArray<TArray<SingleGameMsgDelegate>> GameMsgMap_t;
@@ -69,7 +71,7 @@ public:
     virtual void Reset();
 
 private:
-	GameEventDispatcher();
-	~GameEventDispatcher();
+	UGameEventDispatcher();
+	~UGameEventDispatcher();
     //GameMsgMap_t mGameMsgMap;
 };

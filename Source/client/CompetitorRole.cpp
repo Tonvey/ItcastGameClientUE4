@@ -9,14 +9,19 @@
 ACompetitorRole::ACompetitorRole()
 {
     UE_LOG(LogTemp, Display, TEXT("ACompetitorRole::ACompetitorRole create"));
-    GameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &ACompetitorRole::SetPlayerGroundLocation);
-    GameEventDispatcher::GetInstance().GetOnPlayerLogoff().AddUObject(this,&ACompetitorRole::OnLogoff);
 	PrimaryActorTick.bCanEverTick = true;
 
     //TODO: 这是解决对象不运动的关键
     auto comp = this->GetCharacterMovement();
     comp->bRunPhysicsWithNoController = true;
 }
+
+void ACompetitorRole::Init()
+{
+    UGameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &ACompetitorRole::SetPlayerGroundLocation);
+    UGameEventDispatcher::GetInstance().GetOnPlayerLogoff().AddUObject(this,&ACompetitorRole::OnLogoff);
+}
+
 
 ACompetitorRole::~ACompetitorRole()
 {
