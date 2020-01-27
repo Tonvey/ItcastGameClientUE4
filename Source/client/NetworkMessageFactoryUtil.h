@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameMsg.h"
+#include "NetworkController.h"
 #include "NetworkMessageFactoryUtil.generated.h"
 
 /**
@@ -15,6 +16,9 @@ class CLIENT_API UNetworkMessageFactoryUtil : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:
+
+    UFUNCTION(BlueprintCallable)
+	static UNetworkController *GetNetworkControllerInstance();
     UFUNCTION(BlueprintCallable)
 	static FGameSingleTLV MakeTalkContent(const FText &_content);
     UFUNCTION(BlueprintCallable)

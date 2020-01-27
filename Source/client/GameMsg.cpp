@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "GameMsg.h"
 
-FGameSingleTLV::FGameSingleTLV(FGameSingleTLV::ENUM_GameMsgID type, ::google::protobuf::Message *pbmsg)
+FGameSingleTLV::FGameSingleTLV(GameMsgID_t type, ::google::protobuf::Message *pbmsg)
     :m_MsgType(type), mPbMsg(pbmsg)
 {
 }
@@ -15,7 +15,7 @@ std::string FGameSingleTLV::serialize()
     return out;
 }
 
-FGameSingleTLV::FGameSingleTLV(ENUM_GameMsgID type, std::string content)
+FGameSingleTLV::FGameSingleTLV(EGameMsgID type, std::string content)
     :m_MsgType(type)
 {
 

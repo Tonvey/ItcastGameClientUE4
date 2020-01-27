@@ -16,8 +16,8 @@ public:
 	~NetProtocolResolver();
     virtual GameMsgArray_t ResolveMessage();
     virtual void PushMsg(GameMsgArray_t &msg);
-    virtual void PushMsg(FGameSingleTLV &msg);
-    static void AppendMessageToString(FGameSingleTLV& singlePbMsg, std::string& dest);
+    virtual void PushMsg(const FGameSingleTLV &msg);
+    static void AppendMessageToString(const FGameSingleTLV& singlePbMsg, std::string& dest);
 private:
     TSharedPtr<NetworkConnector> mConnector;
     std::string mLastBuf;

@@ -3,12 +3,28 @@
 #pragma once
 
 #include "CoreMinimal.h"
+//TODO 虽然其他头文件引入了GameMsg.h 但是不直接引入的话会导致UHT 工作不正常
+#include "GameMsg.h"
 #include "NetworkConnector.h"
 #include "NetProtocolResolver.h"
 #include "NetworkController.generated.h"
 /**
  *
  */
+USTRUCT(BlueprintType)
+struct CLIENT_API FHahahaha
+{
+	GENERATED_BODY()
+    ~FHahahaha()
+    {
+        if (msg != nullptr)
+        {
+            delete msg;
+        }
+    }
+    FString name;
+    GameMsg_t *msg;
+};
 UCLASS(BlueprintType)
 class CLIENT_API UNetworkController : public UObject
 {
@@ -22,11 +38,13 @@ public:
     virtual void Reset();
     virtual void ProcessNetworkMessage();
     virtual void PushMsg(GameMsgArray_t &msg);
-    virtual void PushMsg(FGameSingleTLV &msg);
-    DECLARE_EVENT_TwoParams(UNetworkController, NewGameMessage,FGameSingleTLV::ENUM_GameMsgID,::google::protobuf::Message*);
-    virtual NewGameMessage &GetOnNewMessage(){return OnNewGameMessage;};
+    UFUNCTION(BlueprintCallable)
+    virtual void PushMsg(const FGameSingleTLV &msg);
     virtual void PauseProcessMessage();
     virtual void ResumeProcessMessage();
+    bool IsPaused()const { return isPaused; };
+    DECLARE_EVENT_TwoParams(UNetworkController, NewGameMessage,GameMsgID_t,::google::protobuf::Message*);
+    virtual NewGameMessage &GetOnNewMessage(){return OnNewGameMessage;};
 private:
     TSharedPtr<NetworkConnector> mConnector;
     TSharedPtr<NetProtocolResolver> mProtocol;

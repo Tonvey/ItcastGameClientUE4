@@ -61,7 +61,7 @@ void UNetworkController::PushMsg(GameMsgArray_t &msg)
     mProtocol->PushMsg(msg);
 }
 
-void UNetworkController::PushMsg(FGameSingleTLV& msg)
+void UNetworkController::PushMsg(const FGameSingleTLV& msg)
 {
     mProtocol->PushMsg(msg);
 }

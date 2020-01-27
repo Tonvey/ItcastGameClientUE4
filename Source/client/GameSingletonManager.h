@@ -19,6 +19,7 @@ public:
 	UGameSingletonManager();
 	~UGameSingletonManager();
 public:
+    UFUNCTION(BlueprintCallable)
 	UNetworkController *GetNetworkController()
 	{
 		if (networkController == nullptr)
@@ -27,6 +28,7 @@ public:
 		}
 		return networkController;
 	}
+    UFUNCTION(BlueprintCallable)
 	UGameEventDispatcher *GetGameEventDispatcher()
 	{
 		if (gameEventDispatcher == nullptr)
