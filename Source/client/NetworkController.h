@@ -20,8 +20,8 @@ public:
     virtual void Reset();
     virtual void ProcessNetworkMessage();
     virtual void PushMsg(GameMsgArray_t &msg);
-    virtual void PushMsg(GameSingleTLV &msg);
-    DECLARE_EVENT_TwoParams(NetworkController, NewGameMessage,GameSingleTLV::ENUM_GameMsgID,::google::protobuf::Message*);
+    virtual void PushMsg(FGameSingleTLV &msg);
+    DECLARE_EVENT_TwoParams(NetworkController, NewGameMessage,FGameSingleTLV::ENUM_GameMsgID,::google::protobuf::Message*);
     virtual NewGameMessage &GetOnNewMessage(){return OnNewGameMessage;};
     virtual void PauseProcessMessage();
     virtual void ResumeProcessMessage();

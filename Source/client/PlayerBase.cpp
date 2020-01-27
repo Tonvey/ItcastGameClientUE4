@@ -103,3 +103,8 @@ pb::Position APlayerBase::GetPosition() const
     return pos;
 }
 
+FGameMsgPack APlayerBase::GetPositionPack() const
+{
+    auto pos = new pb::Position(GetPosition());
+    return { pos };
+}

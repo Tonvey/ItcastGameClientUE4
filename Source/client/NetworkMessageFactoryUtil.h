@@ -15,8 +15,11 @@ class CLIENT_API UNetworkMessageFactoryUtil : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:
-	static GameSingleTLV MakeTalkContent(const FText &_content);
-    static GameSingleTLV MakeSyncPosition(pb::Position &_posistion);
-	static GameSingleTLV MakeChangeWorldRequest(int _pid, int _src,int _target);
+    UFUNCTION(BlueprintCallable)
+	static FGameSingleTLV MakeTalkContent(const FText &_content);
+    UFUNCTION(BlueprintCallable)
+    static FGameSingleTLV MakeSyncPosition(const FGameMsgPack &_pb_position);
+    UFUNCTION(BlueprintCallable)
+	static FGameSingleTLV MakeChangeWorldRequest(int _pid, int _src,int _target);
 	
 };

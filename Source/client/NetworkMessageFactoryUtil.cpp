@@ -3,28 +3,29 @@
 
 #include "NetworkMessageFactoryUtil.h"
 
-GameSingleTLV UNetworkMessageFactoryUtil::MakeTalkContent(const FText &_content)
+FGameSingleTLV UNetworkMessageFactoryUtil::MakeTalkContent(const FText &_content)
 {
     auto pbMsg = new pb::Talk;
     pbMsg->set_content(TCHAR_TO_UTF8(*_content.ToString()));
-    GameSingleTLV singleMsg(GameMsgID_t::GAME_MSG_TALK_CONTENT,
-        pbMsg);
+    FGameSingleTLV singleMsg = { GameMsgID_t::GAME_MSG_TALK_CONTENT,
+        pbMsg };
     return singleMsg;
 }
-GameSingleTLV UNetworkMessageFactoryUtil::MakeSyncPosition(pb::Position &_posistion)
+FGameSingleTLV UNetworkMessageFactoryUtil::MakeSyncPosition(const FGameMsgPack &_pb_position)
 {
-    GameSingleTLV singleMsg(
+    auto &_position = static_cast<pb::Position&>(*_pb_position.msg);
+    FGameSingleTLV singleMsg(
         GameMsgID_t::GAME_MSG_NEW_POSTION,
-        new pb::Position(_posistion));
+        new pb::Position(_position));
     return singleMsg;
 }
-GameSingleTLV UNetworkMessageFactoryUtil::MakeChangeWorldRequest(int _pid, int _src,int _target)
+FGameSingleTLV UNetworkMessageFactoryUtil::MakeChangeWorldRequest(int _pid, int _src,int _target)
 {
     auto pbMsg = new pb::ChangeWorldRequest;
     pbMsg->set_pid(_pid);
     pbMsg->set_srcid(_src);
     pbMsg->set_targetid(_target);
-    GameSingleTLV singleMsg(
+    FGameSingleTLV singleMsg(
         GameMsgID_t::GAME_MSG_CHANGE_WORLD,
         pbMsg);
     return singleMsg;

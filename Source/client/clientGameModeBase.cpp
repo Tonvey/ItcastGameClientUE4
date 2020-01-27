@@ -97,6 +97,8 @@ void AclientGameModeBase::OnNewPlayer(int _pid, std::string _name,pb::Position _
 }
 void AclientGameModeBase::OnSyncMainPlayerId(APlayerRole *mainPlayer , int _pid)
 {
+    //auto a = *mainPlayer;
+    //TODO : 继承自 UObject的对象不能被拷贝和移动
     if (mMainPlayer != mainPlayer)
     {
         if (mMainPlayer != nullptr)

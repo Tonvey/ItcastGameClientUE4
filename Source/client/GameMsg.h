@@ -2,14 +2,33 @@
 
 #pragma once
 
+//COreMinimal 不包括list
 #include "CoreMinimal.h"
+//#include "Core.h"
 #include "proto/msg.pb.h"
 #include <list>
+#include "GameMsg.generated.h"
 
 typedef ::google::protobuf::Message GameMsg_t;
-class GameSingleTLV
+
+USTRUCT(BlueprintType)
+struct FGameMsgPack
 {
-public:
+	GENERATED_BODY()
+    ~FGameMsgPack()
+    {
+        if (msg != nullptr)
+        {
+            delete msg;
+        }
+    }
+    GameMsg_t *msg;
+};
+
+USTRUCT(BlueprintType)
+struct FGameSingleTLV//: public UObject
+{
+	GENERATED_BODY()
     //定义逻辑消息的类型
     enum ENUM_GameMsgID {
         GAME_MSG_LOGON_SYNCPID = 1,
@@ -25,18 +44,16 @@ public:
         GAME_MSG_SKILL_BROAD = 204,
         GAME_MSG_SKILL_CONTACT_BROAD = 205,
         GAME_MSG_CHANGE_WORLD_RESPONSE = 206,
-    } m_MsgType;
-
+    };
+    std::string serialize();
+    FGameSingleTLV() = default;
+    FGameSingleTLV(const FGameSingleTLV &) = default;
+    FGameSingleTLV(ENUM_GameMsgID type, std::string content);
+    FGameSingleTLV(ENUM_GameMsgID type, ::google::protobuf::Message* pbmsg);
+    ENUM_GameMsgID m_MsgType;
     //定义一个父类对象的指针,用来存储不同类型的子类
     TSharedPtr<::google::protobuf::Message> mPbMsg;
-
-    std::string serialize();
-
-    GameSingleTLV(GameSingleTLV &&other);
-    GameSingleTLV(const GameSingleTLV &other) = default;
-    GameSingleTLV(ENUM_GameMsgID type, std::string content);
-    GameSingleTLV(ENUM_GameMsgID type, ::google::protobuf::Message *pbmsg) :m_MsgType(type), mPbMsg(pbmsg) {}
 };
-typedef GameSingleTLV::ENUM_GameMsgID GameMsgID_t;
-typedef std::list<GameSingleTLV> GameMsgArray_t;
+typedef FGameSingleTLV::ENUM_GameMsgID GameMsgID_t;
+typedef std::list<FGameSingleTLV> GameMsgArray_t;
 

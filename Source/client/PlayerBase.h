@@ -8,6 +8,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameEventDispatcher.h"
+#include "GameMsg.h"
 #include "PlayerBase.generated.h"
 
 UCLASS()
@@ -64,6 +65,8 @@ public:
     virtual void SetDirection(float _zRot);
     virtual void SetPlayerGroundLocation(int _pid,pb::Position _pos);
     virtual pb::Position GetPosition()const;
+    UFUNCTION(BlueprintCallable)
+    virtual FGameMsgPack GetPositionPack()const;
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int mPid = 0;

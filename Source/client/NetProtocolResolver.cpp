@@ -48,7 +48,7 @@ GameMsgArray_t NetProtocolResolver::ResolveMessage()
             //buf要清理掉这个报文
             mLastBuf.erase(0, 8 + len);
             //产生一个SingletTLV
-            GameSingleTLV msg((GameSingleTLV::ENUM_GameMsgID)msgType, msgContent);
+            FGameSingleTLV msg((FGameSingleTLV::ENUM_GameMsgID)msgType, msgContent);
             if(msg.mPbMsg.IsValid())
             {
 				gameMsg.push_back(msg);
@@ -81,7 +81,7 @@ void NetProtocolResolver::PushMsg(GameMsgArray_t &msg)
     }
 }
 
-void NetProtocolResolver::AppendMessageToString(GameSingleTLV &singlePbMsg,std::string &dest)
+void NetProtocolResolver::AppendMessageToString(FGameSingleTLV &singlePbMsg,std::string &dest)
 {
 	std::string pbBuf = singlePbMsg.mPbMsg->SerializeAsString();
 	int32 len = pbBuf.size();
@@ -96,7 +96,7 @@ void NetProtocolResolver::AppendMessageToString(GameSingleTLV &singlePbMsg,std::
 	dest.push_back((char)((msgId >> 24) & 0xff));
 	dest.append(pbBuf);
 }
-void NetProtocolResolver::PushMsg(GameSingleTLV& msg)
+void NetProtocolResolver::PushMsg(FGameSingleTLV& msg)
 {
     std::string sendBuf;
     AppendMessageToString(msg, sendBuf);
