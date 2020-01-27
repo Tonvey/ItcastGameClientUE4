@@ -5,23 +5,25 @@
 #include "CoreMinimal.h"
 #include "NetworkConnector.h"
 #include "NetProtocolResolver.h"
-#include "Singleton.hpp"
-
+#include "NetworkController.generated.h"
 /**
  *
  */
-class CLIENT_API NetworkController : public Singleton<NetworkController>
+UCLASS(BlueprintType)
+class CLIENT_API UNetworkController : public UObject
 {
+	GENERATED_BODY()
 public:
-	NetworkController();
-	virtual ~NetworkController();
+    static UNetworkController &GetInstance();
+	UNetworkController();
+	virtual ~UNetworkController();
     virtual void Init(FString ip , uint16 port);
     virtual void Finish();
     virtual void Reset();
     virtual void ProcessNetworkMessage();
     virtual void PushMsg(GameMsgArray_t &msg);
     virtual void PushMsg(FGameSingleTLV &msg);
-    DECLARE_EVENT_TwoParams(NetworkController, NewGameMessage,FGameSingleTLV::ENUM_GameMsgID,::google::protobuf::Message*);
+    DECLARE_EVENT_TwoParams(UNetworkController, NewGameMessage,FGameSingleTLV::ENUM_GameMsgID,::google::protobuf::Message*);
     virtual NewGameMessage &GetOnNewMessage(){return OnNewGameMessage;};
     virtual void PauseProcessMessage();
     virtual void ResumeProcessMessage();

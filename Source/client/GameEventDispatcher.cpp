@@ -7,7 +7,6 @@ using namespace std;
 GameEventDispatcher::GameEventDispatcher()
 {
     UE_LOG(LogTemp, Display, TEXT("GameEventDispatcher::GameEventDispatcher"));
-    NetworkController::GetInstance().GetOnNewMessage().AddRaw(this,&GameEventDispatcher::OnNewGameMessage);
 }
 
 GameEventDispatcher::~GameEventDispatcher()
@@ -17,6 +16,7 @@ GameEventDispatcher::~GameEventDispatcher()
 
 void GameEventDispatcher::Init()
 {
+    UNetworkController::GetInstance().GetOnNewMessage().AddRaw(this,&GameEventDispatcher::OnNewGameMessage);
 }
 void GameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
 {

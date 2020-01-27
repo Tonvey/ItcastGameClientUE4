@@ -2,32 +2,39 @@
 
 
 #include "NetworkController.h"
+#include "GameSingletonManager.h"
 
-NetworkController::NetworkController()
+UNetworkController& UNetworkController::GetInstance()
+{
+    auto ret = UGameSingletonManager::GetInstance()->GetNetworkController();
+    return *ret;
+}
+
+UNetworkController::UNetworkController()
     :isPaused(false)
 {
 }
 
-NetworkController::~NetworkController()
+UNetworkController::~UNetworkController()
 {
     Finish();
 }
-void NetworkController::Init(FString ip , uint16 port)
+void UNetworkController::Init(FString ip , uint16 port)
 {
     mConnector= decltype(mConnector)( new NetworkConnector(ip,port));
     mProtocol= decltype(mProtocol)( new NetProtocolResolver(mConnector));
 }
-void NetworkController::Finish()
+void UNetworkController::Finish()
 {
     mConnector =decltype(mConnector)();
     mProtocol= decltype(mProtocol)();
     isPaused = false;
 }
-void NetworkController::Reset()
+void UNetworkController::Reset()
 {
     Finish();
 }
-void NetworkController::ProcessNetworkMessage()
+void UNetworkController::ProcessNetworkMessage()
 {
     if (mLastMessages.size()==0)
     {
@@ -49,22 +56,22 @@ void NetworkController::ProcessNetworkMessage()
     }
 }
 
-void NetworkController::PushMsg(GameMsgArray_t &msg)
+void UNetworkController::PushMsg(GameMsgArray_t &msg)
 {
     mProtocol->PushMsg(msg);
 }
 
-void NetworkController::PushMsg(FGameSingleTLV& msg)
+void UNetworkController::PushMsg(FGameSingleTLV& msg)
 {
     mProtocol->PushMsg(msg);
 }
 
-void NetworkController::PauseProcessMessage()
+void UNetworkController::PauseProcessMessage()
 {
     isPaused = true;
 }
 
-void NetworkController::ResumeProcessMessage()
+void UNetworkController::ResumeProcessMessage()
 {
     isPaused = false;
 }

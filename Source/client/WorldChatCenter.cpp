@@ -17,5 +17,5 @@ void UWorldChatCenter::SendContent_Implementation(const FText& content)
 {
     UE_LOG(LogTemp, Display, TEXT("UWorldChatCenter::SendContent_Implementation") );
 	auto msg = UNetworkMessageFactoryUtil::MakeTalkContent(content);
-	NetworkController::GetInstance().PushMsg(msg);
+	UNetworkController::GetInstance().PushMsg(msg);
 }

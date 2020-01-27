@@ -26,7 +26,7 @@ AclientGameModeBase::AclientGameModeBase()
 AclientGameModeBase::~AclientGameModeBase()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::~AclientGameModeBase") );
-    NetworkController::GetInstance().Reset();
+    UNetworkController::GetInstance().Reset();
     GameEventDispatcher::GetInstance().Reset();
     mPlayerMap.Reset();
 }
@@ -56,7 +56,7 @@ ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(in
 void AclientGameModeBase::Init()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::Init") );
-    NetworkController::GetInstance().Init(TEXT("127.0.0.1"),8899);
+    UNetworkController::GetInstance().Init(TEXT("127.0.0.1"),8899);
     GameEventDispatcher::GetInstance().Init();
     GameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
     GameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
@@ -70,7 +70,7 @@ void AclientGameModeBase::BeginPlay()
 void AclientGameModeBase::Tick(float deltaTime)
 {
     Super::Tick(deltaTime);
-    NetworkController::GetInstance().ProcessNetworkMessage();
+    UNetworkController::GetInstance().ProcessNetworkMessage();
 }
 
 void AclientGameModeBase::OnNewPlayer(int _pid, std::string _name,pb::Position _pos)
@@ -113,7 +113,7 @@ void AclientGameModeBase::OnChangeWorld(int _srcId, int _targetId, int _res)
 {
     if (_res == 1)
     {
-        NetworkController::GetInstance().PauseProcessMessage();
+        UNetworkController::GetInstance().PauseProcessMessage();
         this->ChangeWorld(_srcId, _targetId);
     }
 }
@@ -140,6 +140,6 @@ void AclientGameModeBase::UnregisterPlayer(int _pid)
 void AclientGameModeBase::RequestChangeWorld(int _pid, int _target)
 {
     auto msg = UNetworkMessageFactoryUtil::MakeChangeWorldRequest(_pid, this->mWorldId, _target);
-    NetworkController::GetInstance().PushMsg(msg);
+    UNetworkController::GetInstance().PushMsg(msg);
 }
 
