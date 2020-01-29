@@ -15,12 +15,5 @@
 				"UMG"
 			]
 		}
-	],
-	"Plugins": [
-		{
-			"Name": "QtCreatorSourceCodeAccess",
-			"Enabled": true,
-			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/f24d20bbb84549479511d7c30c753f90"
-		}
 	]
 }
