@@ -7,6 +7,10 @@ UNetworkController *UNetworkMessageFactoryUtil::GetNetworkControllerInstance()
 {
     return &UNetworkController::GetInstance();
 }
+UGameEventDispatcher* UNetworkMessageFactoryUtil::GetGameEventDispatcher()
+{
+    return &UGameEventDispatcher::GetInstance();
+}
 FGameSingleTLV UNetworkMessageFactoryUtil::MakeTalkContent(const FText &_content)
 {
     auto pbMsg = new pb::Talk;

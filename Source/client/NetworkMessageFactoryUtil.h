@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameMsg.h"
 #include "NetworkController.h"
+#include "GameEventDispatcher.h"
 #include "NetworkMessageFactoryUtil.generated.h"
 
 /**
@@ -19,6 +20,8 @@ public:
 
     UFUNCTION(BlueprintCallable)
 	static UNetworkController *GetNetworkControllerInstance();
+    UFUNCTION(BlueprintCallable)
+	static UGameEventDispatcher *GetGameEventDispatcher();
     UFUNCTION(BlueprintCallable)
 	static FGameSingleTLV MakeTalkContent(const FText &_content);
     UFUNCTION(BlueprintCallable)

@@ -13,6 +13,12 @@ APlayerRole::APlayerRole()
 }
 void APlayerRole::Init()
 {
+    //TODO 想要让C++和bp都有事件可以响应，目前只能是引用dynamic multicast delegate，因为dynamic通过字符串反射
+    //获取C++或者BP的函数，所以性能上低于普通delegate,BP那边要bind一个event上来
+    //delegate 要以UPROPERTY( BlueprintAssignable)的方式存在
+    //FScriptDelegate d;
+    //d.BindUFunction(this, "SetPid");
+    //UGameEventDispatcher::GetInstance().GetOnSyncPid().Add(d);
     UGameEventDispatcher::GetInstance().GetOnSyncPid().AddUObject(this,&APlayerRole::SetPid);
     UGameEventDispatcher::GetInstance().GetOnSyncPlayerName().AddUObject(this,&APlayerRole::SetPlayerName);
     UGameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &APlayerRole::SetPlayerGroundLocation);

@@ -11,20 +11,6 @@
 /**
  *
  */
-USTRUCT(BlueprintType)
-struct CLIENT_API FHahahaha
-{
-	GENERATED_BODY()
-    ~FHahahaha()
-    {
-        if (msg != nullptr)
-        {
-            delete msg;
-        }
-    }
-    FString name;
-    GameMsg_t *msg;
-};
 UCLASS(BlueprintType)
 class CLIENT_API UNetworkController : public UObject
 {

@@ -47,6 +47,7 @@ void UGameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
             case 1:
             {
                 //talk
+                mOnSyncChat.Broadcast(msg->pid(), msg->username(), msg->content());
                 break;
             }
             case 2:

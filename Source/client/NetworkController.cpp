@@ -29,6 +29,7 @@ void UNetworkController::Finish()
     mConnector =decltype(mConnector)();
     mProtocol= decltype(mProtocol)();
     isPaused = false;
+    OnNewGameMessage.Clear();
 }
 void UNetworkController::Reset()
 {
