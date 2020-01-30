@@ -22,10 +22,12 @@ public:
     UFUNCTION(BlueprintNativeEvent)
     ACompetitorRole *CreateACompetitorToLevel(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation,int _hp);
     ACompetitorRole *CreateACompetitorToLevel_Implementation(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation,int _hp);
-    UFUNCTION(BlueprintImplementableEvent)
+    UFUNCTION(BlueprintCallable)
     void ChangeWorld(int _srcId ,int _targetId);
-    UFUNCTION(BlueprintCallable, Category = "Action")
+    UFUNCTION(BlueprintCallable)
     virtual void Init();
+    UFUNCTION(BlueprintCallable)
+    virtual void PreChangeLevel();
     virtual void BeginPlay()override;
     virtual void Tick(float deltaTime) override;
     virtual void OnNewPlayer(int _pid, std::string _name,pb::Position _pos);
@@ -43,9 +45,16 @@ public:
     UPROPERTY( BlueprintReadOnly )
     APlayerRole *mMainPlayer;
 
+    UPROPERTY(BlueprintReadWrite)
+    int currentLevelID;
+
+    UPROPERTY(BlueprintReadOnly)
+    TArray<FName> levelNameArray;
 protected:
     TMap<int, APlayerBase*> mPlayerMap;
     static AclientGameModeBase* smCurrentMode;
     UPROPERTY(BlueprintReadWrite)
 	int mWorldId;
+private:
+    bool isChangingLevel;
 };

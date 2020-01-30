@@ -21,8 +21,14 @@ UNetworkController::~UNetworkController()
 }
 void UNetworkController::Init(FString ip , uint16 port)
 {
-    mConnector= decltype(mConnector)( new NetworkConnector(ip,port));
-    mProtocol= decltype(mProtocol)( new NetProtocolResolver(mConnector));
+    if (!mConnector.IsValid())
+    {
+		mConnector = decltype(mConnector)(new NetworkConnector(ip, port));
+    }
+    if (!mProtocol.IsValid())
+    {
+		mProtocol = decltype(mProtocol)(new NetProtocolResolver(mConnector));
+    }
 }
 void UNetworkController::Finish()
 {

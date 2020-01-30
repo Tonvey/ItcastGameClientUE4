@@ -10,8 +10,10 @@
 #include "GameFramework/Actor.h"
 #include "ConstructorHelpers.h"
 #include "NetworkMessageFactoryUtil.h"
+#include "Engine.h"
 AclientGameModeBase* AclientGameModeBase::smCurrentMode=nullptr;
 AclientGameModeBase::AclientGameModeBase()
+    :isChangingLevel(false)
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::AclientGameModeBase") );
     smCurrentMode = this;
@@ -22,11 +24,18 @@ AclientGameModeBase::AclientGameModeBase()
     //{  
     //    CompetitorClass = (UClass*)PutNameHere.Object->GeneratedClass;  
     //}  
+
+    levelNameArray.Add(FName("Undefined"));
+    levelNameArray.Add(FName("WorldMap"));
+    levelNameArray.Add(FName("BattleField"));
 }
 AclientGameModeBase::~AclientGameModeBase()
 {
-    UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::~AclientGameModeBase") );
-    UNetworkController::GetInstance().Reset();
+    UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::~AclientGameModeBase"));
+    if (!isChangingLevel)
+    {
+		UNetworkController::GetInstance().Reset();
+    }
     UGameEventDispatcher::GetInstance().Reset();
     mPlayerMap.Reset();
 }
@@ -53,19 +62,35 @@ ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(in
     newRole->GetOnLogoff().AddUObject(this, &AclientGameModeBase::OnPlayerLogoff);
     return newRole;
 }
+void AclientGameModeBase::ChangeWorld(int _srcId, int _targetId)
+{
+    if (_targetId > levelNameArray.Num() - 1 || _targetId <= 0)
+    {
+        //TODO : LOG
+        return;
+    }
+    //TODO : 切换关卡
+    UGameplayStatics::OpenLevel(GetWorld(), levelNameArray[_targetId]);
+}
 void AclientGameModeBase::Init()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::Init") );
     UNetworkController::GetInstance().Init(TEXT("127.0.0.1"),8899);
+    UNetworkController::GetInstance().ResumeProcessMessage();
     UGameEventDispatcher::GetInstance().Init();
     UGameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
     UGameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
     UGameEventDispatcher::GetInstance().GetOnChangeWorld().AddUObject(this, &AclientGameModeBase::OnChangeWorld);
 }
+void AclientGameModeBase::PreChangeLevel()
+{
+    isChangingLevel = true;
+}
 void AclientGameModeBase::BeginPlay()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::BeginPlay") );
     Super::BeginPlay();
+    Init();
 }
 void AclientGameModeBase::Tick(float deltaTime)
 {
@@ -113,8 +138,16 @@ void AclientGameModeBase::OnChangeWorld(int _srcId, int _targetId, int _res)
 {
     if (_res == 1)
     {
-        UNetworkController::GetInstance().PauseProcessMessage();
-        this->ChangeWorld(_srcId, _targetId);
+        if (_targetId != currentLevelID)
+        {
+			UNetworkController::GetInstance().PauseProcessMessage();
+			this->PreChangeLevel();
+			this->ChangeWorld(_srcId, _targetId);
+        }
+        else
+        {
+            //TODO 打Log
+        }
     }
 }
 void AclientGameModeBase::OnPlayerLogoff(int _pid)

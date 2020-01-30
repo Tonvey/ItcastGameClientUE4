@@ -74,4 +74,5 @@ private:
 	UGameEventDispatcher();
 	~UGameEventDispatcher();
     //GameMsgMap_t mGameMsgMap;
+    FDelegateHandle handle;
 };

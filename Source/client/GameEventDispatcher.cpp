@@ -18,11 +18,18 @@ UGameEventDispatcher::UGameEventDispatcher()
 UGameEventDispatcher::~UGameEventDispatcher()
 {
     UE_LOG(LogTemp, Display, TEXT("UGameEventDispatcher::~UGameEventDispatcher"));
+    if (handle.IsValid())
+    {
+        UNetworkController::GetInstance().GetOnNewMessage().Remove(handle);
+    }
 }
 
 void UGameEventDispatcher::Init()
 {
-    UNetworkController::GetInstance().GetOnNewMessage().AddUObject(this,&UGameEventDispatcher::OnNewGameMessage);
+    if (!handle.IsValid())
+    {
+		handle = UNetworkController::GetInstance().GetOnNewMessage().AddUObject(this, &UGameEventDispatcher::OnNewGameMessage);
+    }
 }
 void UGameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
 {
