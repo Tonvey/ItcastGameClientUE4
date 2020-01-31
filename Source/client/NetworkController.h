@@ -16,7 +16,7 @@ class CLIENT_API UNetworkController : public UObject
 {
 	GENERATED_BODY()
 public:
-    static UNetworkController &GetInstance();
+    static UNetworkController *GetInstance();
 	UNetworkController();
 	virtual ~UNetworkController();
     virtual void Init(FString ip , uint16 port);

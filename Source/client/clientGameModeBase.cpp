@@ -32,12 +32,6 @@ AclientGameModeBase::AclientGameModeBase()
 AclientGameModeBase::~AclientGameModeBase()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::~AclientGameModeBase"));
-    if (!isChangingLevel)
-    {
-		UNetworkController::GetInstance().Reset();
-    }
-    UGameEventDispatcher::GetInstance().Reset();
-    mPlayerMap.Reset();
 }
 ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(int _pid,
     const FString& _name,
@@ -62,7 +56,7 @@ ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(in
     newRole->GetOnLogoff().AddUObject(this, &AclientGameModeBase::OnPlayerLogoff);
     return newRole;
 }
-void AclientGameModeBase::ChangeWorld(int _srcId, int _targetId)
+void AclientGameModeBase::ChangeLevel(int _srcId, int _targetId)
 {
     if (_targetId > levelNameArray.Num() - 1 || _targetId <= 0)
     {
@@ -72,30 +66,14 @@ void AclientGameModeBase::ChangeWorld(int _srcId, int _targetId)
     //TODO : 切换关卡
     UGameplayStatics::OpenLevel(GetWorld(), levelNameArray[_targetId]);
 }
-void AclientGameModeBase::Init()
-{
-    UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::Init") );
-    UNetworkController::GetInstance().Init(TEXT("127.0.0.1"),8899);
-    UNetworkController::GetInstance().ResumeProcessMessage();
-    UGameEventDispatcher::GetInstance().Init();
-    UGameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
-    UGameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
-    UGameEventDispatcher::GetInstance().GetOnChangeWorld().AddUObject(this, &AclientGameModeBase::OnChangeWorld);
-}
 void AclientGameModeBase::PreChangeLevel()
 {
     isChangingLevel = true;
 }
-void AclientGameModeBase::BeginPlay()
-{
-    UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::BeginPlay") );
-    Super::BeginPlay();
-    Init();
-}
 void AclientGameModeBase::Tick(float deltaTime)
 {
     Super::Tick(deltaTime);
-    UNetworkController::GetInstance().ProcessNetworkMessage();
+    UNetworkController::GetInstance()->ProcessNetworkMessage();
 }
 
 void AclientGameModeBase::OnNewPlayer(int _pid, std::string _name,pb::Position _pos)
@@ -140,9 +118,9 @@ void AclientGameModeBase::OnChangeWorld(int _srcId, int _targetId, int _res)
     {
         if (_targetId != currentLevelID)
         {
-			UNetworkController::GetInstance().PauseProcessMessage();
+			UNetworkController::GetInstance()->PauseProcessMessage();
 			this->PreChangeLevel();
-			this->ChangeWorld(_srcId, _targetId);
+			this->ChangeLevel(_srcId, _targetId);
         }
         else
         {
@@ -170,9 +148,38 @@ void AclientGameModeBase::UnregisterPlayer(int _pid)
     mPlayerMap.Remove(_pid);
 }
 
+void AclientGameModeBase::BeginPlay()
+{
+    Super::BeginPlay();
+    UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::BeginPlay()"));
+    UNetworkController::GetInstance()->Init(TEXT("127.0.0.1"),8899);
+    UNetworkController::GetInstance()->ResumeProcessMessage();
+    UGameEventDispatcher::GetInstance().Init();
+    UGameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
+    UGameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
+    UGameEventDispatcher::GetInstance().GetOnChangeWorld().AddUObject(this, &AclientGameModeBase::OnChangeWorld);
+}
+
+void AclientGameModeBase::Reset()
+{
+    Super::Reset();
+}
+
+void AclientGameModeBase::BeginDestroy()
+{
+    Super::BeginDestroy();
+    UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::BeginDestroy") );
+    if (!isChangingLevel)
+    {
+		UNetworkController::GetInstance()->Finish();
+    }
+    UGameEventDispatcher::GetInstance().Reset();
+    mPlayerMap.Reset();
+}
+
 void AclientGameModeBase::RequestChangeWorld(int _pid, int _target)
 {
     auto msg = UNetworkMessageFactoryUtil::MakeChangeWorldRequest(_pid, this->mWorldId, _target);
-    UNetworkController::GetInstance().PushMsg(msg);
+    UNetworkController::GetInstance()->PushMsg(msg);
 }
 

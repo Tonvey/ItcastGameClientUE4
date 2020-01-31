@@ -5,7 +5,7 @@
 
 UNetworkController *UNetworkMessageFactoryUtil::GetNetworkControllerInstance()
 {
-    return &UNetworkController::GetInstance();
+    return UNetworkController::GetInstance();
 }
 UGameEventDispatcher* UNetworkMessageFactoryUtil::GetGameEventDispatcher()
 {

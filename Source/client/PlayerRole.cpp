@@ -50,7 +50,7 @@ void APlayerRole::Tick(float DeltaTime)
        {
            auto pbPos = this->GetPositionPack();
            auto msg = UNetworkMessageFactoryUtil::MakeSyncPosition(pbPos);
-		   UNetworkController::GetInstance().PushMsg(msg);
+		   UNetworkController::GetInstance()->PushMsg(msg);
 		   mLastPositionSyncInterval = 0.0f;
            mLastSyncPosition = newPos;
        }

@@ -23,12 +23,9 @@ public:
     ACompetitorRole *CreateACompetitorToLevel(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation,int _hp);
     ACompetitorRole *CreateACompetitorToLevel_Implementation(int _pid ,const FString &_name , FVector _groundLocation,FRotator _rotation,int _hp);
     UFUNCTION(BlueprintCallable)
-    void ChangeWorld(int _srcId ,int _targetId);
-    UFUNCTION(BlueprintCallable)
-    virtual void Init();
+    void ChangeLevel(int _srcId ,int _targetId);
     UFUNCTION(BlueprintCallable)
     virtual void PreChangeLevel();
-    virtual void BeginPlay()override;
     virtual void Tick(float deltaTime) override;
     virtual void OnNewPlayer(int _pid, std::string _name,pb::Position _pos);
     virtual void OnSyncMainPlayerId(APlayerRole* mainPlayer, int _pid);
@@ -37,6 +34,11 @@ public:
     virtual void RegisterPlayer(int _pid ,APlayerBase *_player);
     virtual void UnregisterPlayer(int _pid);
     static AclientGameModeBase &GetCurrentClientGameMode(){ return *smCurrentMode; }
+
+
+    virtual void BeginPlay()override;
+	virtual void Reset() override;
+	virtual void BeginDestroy()override;
 
 	UFUNCTION(BlueprintCallable)
     void RequestChangeWorld(int _pid,int _target);

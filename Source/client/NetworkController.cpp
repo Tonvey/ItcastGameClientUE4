@@ -4,10 +4,10 @@
 #include "NetworkController.h"
 #include "GameSingletonManager.h"
 
-UNetworkController& UNetworkController::GetInstance()
+UNetworkController *UNetworkController::GetInstance()
 {
     auto ret = UGameSingletonManager::GetInstance()->GetNetworkController();
-    return *ret;
+    return ret;
 }
 
 UNetworkController::UNetworkController()
