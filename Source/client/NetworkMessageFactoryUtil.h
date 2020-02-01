@@ -29,4 +29,6 @@ public:
     UFUNCTION(BlueprintCallable)
 	static FGameSingleTLV MakeChangeWorldRequest(int _pid, int _src,int _target);
 	
+    UFUNCTION(BlueprintCallable)
+    static FGameSingleTLV MakeSkillTrigger(int pid, int skillId,int bulletId,const FGameMsgPack &position , const FGameMsgPack &velocity);
 };

@@ -39,3 +39,14 @@ FGameSingleTLV UNetworkMessageFactoryUtil::MakeChangeWorldRequest(int _pid, int 
     return singleMsg;
 }
 
+FGameSingleTLV UNetworkMessageFactoryUtil::MakeSkillTrigger(int pid, int skillId,int bulletId,const FGameMsgPack &position , const FGameMsgPack &velocity)
+{
+    auto &_position = static_cast<pb::Position&>(*position.msg);
+    auto &_velocity = static_cast<pb::Velocity&>(*velocity.msg);
+    auto pbmsg = new pb::SkillTrigger;
+    pbmsg->
+    FGameSingleTLV singleMsg(
+        GameMsgID_t::GAME_MSG_SKILL_TRIGGER,
+        new pb::Position(_position));
+    return singleMsg;
+}
