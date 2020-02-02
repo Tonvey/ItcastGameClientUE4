@@ -19,7 +19,9 @@ class CLIENT_API UNetworkMessageFactoryUtil : public UBlueprintFunctionLibrary
 public:
 
     UFUNCTION(BlueprintCallable)
-    static FGameMsgPack VectorToVelocity(const FVector &vec);
+    static FGameMsgPack MakeVelocityPack(const FVector &vec);
+    UFUNCTION(BlueprintCallable)
+    static FGameMsgPack MakePositionPack(int hp,const FVector &vec);
     UFUNCTION(BlueprintCallable)
 	static UNetworkController *GetNetworkControllerInstance();
     UFUNCTION(BlueprintCallable)
@@ -30,7 +32,13 @@ public:
     static FGameSingleTLV MakeSyncPosition(const FGameMsgPack &_pb_position);
     UFUNCTION(BlueprintCallable)
 	static FGameSingleTLV MakeChangeWorldRequest(int _pid, int _src,int _target);
-	
     UFUNCTION(BlueprintCallable)
     static FGameSingleTLV MakeSkillTrigger(int pid, int skillId,int bulletId,const FGameMsgPack &position , const FGameMsgPack &velocity);
+    UFUNCTION(BlueprintCallable)
+    static FGameSingleTLV MakeSkillContact(
+        int srcPid,
+        int targetPid,
+        int skillId,
+        int bulletId,
+        const FGameMsgPack& contactPosition);
 };

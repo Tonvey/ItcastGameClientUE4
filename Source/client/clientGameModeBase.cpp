@@ -18,7 +18,7 @@ AclientGameModeBase::AclientGameModeBase()
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::AclientGameModeBase") );
     smCurrentMode = this;
     PrimaryActorTick.bCanEverTick = true;
-    //TODO 以下代码也可行
+    //TODO 以下代码也可行  ,也可以直接在blueprint编辑器上直接设置该值
     //static ConstructorHelpers::FObjectFinder<UBlueprint> PutNameHere(TEXT("Blueprint'/Game/BluePrints/Competitor.Competitor'"));  
     //if (PutNameHere.Object)   
     //{  

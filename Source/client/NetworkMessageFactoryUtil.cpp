@@ -1,8 +1,23 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "NetworkMessageFactoryUtil.h"
 #include "DataAdapter.h"
+
+FGameMsgPack UNetworkMessageFactoryUtil::MakeVelocityPack(const FVector& vec)
+{
+    auto v = new pb::Velocity;
+    auto p = DataAdapter::PostionCS(vec);
+    v->set_x(p.x());
+    v->set_y(p.y());
+    v->set_z(p.z());
+    return { v };
+}
+FGameMsgPack UNetworkMessageFactoryUtil::MakePositionPack(int hp, const FVector& vec)
+{
+    auto p = DataAdapter::PostionCS(vec);
+    p.set_bloodvalue(hp);
+    return { new pb::Position(p) };
+}
 
 UNetworkController *UNetworkMessageFactoryUtil::GetNetworkControllerInstance()
 {
@@ -58,12 +73,18 @@ FGameSingleTLV UNetworkMessageFactoryUtil::MakeSkillTrigger(int pid, int skillId
         pbMsg);
     return singleMsg;
 }
-FGameMsgPack UNetworkMessageFactoryUtil::VectorToVelocity(const FVector& vec)
+FGameSingleTLV UNetworkMessageFactoryUtil::MakeSkillContact(int srcPid, int targetPid, int skillId, int bulletId, const FGameMsgPack& contactPosition)
 {
-    auto v = new pb::Velocity;
-    auto p = DataAdapter::PostionCS(vec);
-    v->set_x(p.x());
-    v->set_y(p.y());
-    v->set_z(p.z());
-    return { v };
+    auto &_position = static_cast<pb::Position&>(*contactPosition.msg);
+    auto pbMsg = new pb::SkillContact;
+    pbMsg->set_srcpid(srcPid);
+    pbMsg->set_targetpid(targetPid);
+    pbMsg->set_skillid(skillId);
+    pbMsg->set_bulletid(bulletId);
+    auto p = pbMsg->mutable_contactpos();
+    p->CopyFrom(_position);
+    FGameSingleTLV singleMsg(
+        GameMsgID_t::GAME_MSG_SKILL_CONTACT,
+        pbMsg);
+    return singleMsg;
 }
