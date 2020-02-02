@@ -15,14 +15,9 @@ USTRUCT(BlueprintType)
 struct CLIENT_API FGameMsgPack
 {
 	GENERATED_BODY()
-    ~FGameMsgPack()
-    {
-        if (msg != nullptr)
-        {
-            delete msg;
-        }
-    }
-    GameMsg_t *msg;
+	TSharedPtr<GameMsg_t> msg;
+	FGameMsgPack()=default;
+	FGameMsgPack(GameMsg_t* Msg):msg(Msg) {}
 };
 UENUM(BlueprintType)
 enum EGameMsgID {

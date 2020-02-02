@@ -19,6 +19,8 @@ class CLIENT_API UNetworkMessageFactoryUtil : public UBlueprintFunctionLibrary
 public:
 
     UFUNCTION(BlueprintCallable)
+    static FGameMsgPack VectorToVelocity(const FVector &vec);
+    UFUNCTION(BlueprintCallable)
 	static UNetworkController *GetNetworkControllerInstance();
     UFUNCTION(BlueprintCallable)
 	static UGameEventDispatcher *GetGameEventDispatcher();

@@ -2,6 +2,7 @@
 
 
 #include "NetworkMessageFactoryUtil.h"
+#include "DataAdapter.h"
 
 UNetworkController *UNetworkMessageFactoryUtil::GetNetworkControllerInstance()
 {
@@ -43,10 +44,26 @@ FGameSingleTLV UNetworkMessageFactoryUtil::MakeSkillTrigger(int pid, int skillId
 {
     auto &_position = static_cast<pb::Position&>(*position.msg);
     auto &_velocity = static_cast<pb::Velocity&>(*velocity.msg);
-    auto pbmsg = new pb::SkillTrigger;
-    pbmsg->
+    auto pbMsg = new pb::SkillTrigger;
+    pbMsg->set_pid(pid);
+    pbMsg->set_skillid(skillId);
+    pbMsg->set_bulletid(bulletId);
+    auto p = pbMsg->mutable_p();
+    p->CopyFrom(_position);
+    auto v = pbMsg->mutable_v();
+    v->CopyFrom(_velocity);
+
     FGameSingleTLV singleMsg(
         GameMsgID_t::GAME_MSG_SKILL_TRIGGER,
-        new pb::Position(_position));
+        pbMsg);
     return singleMsg;
+}
+FGameMsgPack UNetworkMessageFactoryUtil::VectorToVelocity(const FVector& vec)
+{
+    auto v = new pb::Velocity;
+    auto p = DataAdapter::PostionCS(vec);
+    v->set_x(p.x());
+    v->set_y(p.y());
+    v->set_z(p.z());
+    return { v };
 }
