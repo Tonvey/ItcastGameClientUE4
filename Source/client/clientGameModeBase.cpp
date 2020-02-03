@@ -19,12 +19,11 @@ AclientGameModeBase::AclientGameModeBase()
     smCurrentMode = this;
     PrimaryActorTick.bCanEverTick = true;
     //TODO 以下代码也可行  ,也可以直接在blueprint编辑器上直接设置该值
-    static ConstructorHelpers::FObjectFinder<UBlueprint> PutNameHere(TEXT("Blueprint'/Game/BluePrints/Competitor.Competitor'"));  
-    if (PutNameHere.Object)   
-    {  
-        CompetitorClass = (UClass*)PutNameHere.Object->GeneratedClass;  
-    }  
-
+    //static ConstructorHelpers::FObjectFinder<UBlueprint> PutNameHere(TEXT("Blueprint'/Game/BluePrints/Competitor.Competitor'"));  
+    //if (PutNameHere.Object)   
+    //{  
+    //    CompetitorClass = (UClass*)PutNameHere.Object->GeneratedClass;  
+    //}  
     levelNameArray.Add(FName("Undefined"));
     levelNameArray.Add(FName("WorldMap"));
     levelNameArray.Add(FName("BattleField"));
@@ -32,6 +31,12 @@ AclientGameModeBase::AclientGameModeBase()
 AclientGameModeBase::~AclientGameModeBase()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::~AclientGameModeBase"));
+    if (!isChangingLevel)
+    {
+        UNetworkController::GetInstance()->Reset();
+    }
+    UGameEventDispatcher::GetInstance().Reset();
+    mPlayerMap.Reset();
 }
 ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(int _pid,
     const FString& _name,
