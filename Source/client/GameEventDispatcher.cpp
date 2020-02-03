@@ -95,10 +95,14 @@ void UGameEventDispatcher::OnNewGameMessage(GameMsgID_t type,GameMsg_t *_msg)
         }
     case GameMsgID_t::GAME_MSG_SKILL_BROAD:
         {
+		    auto msg = static_cast<pb::SkillTrigger*>(_msg);
+            mOnSkillTrigger.Broadcast(msg->pid(), msg->skillid(), msg->bulletid(), msg->p(), msg->v());
             break;
         }
     case GameMsgID_t::GAME_MSG_SKILL_CONTACT_BROAD:
         {
+            auto msg = static_cast<pb::SkillContact*>(_msg);
+            mOnSkillContact.Broadcast(msg->srcpid(), msg->targetpid(),msg->skillid(), msg->bulletid(),msg->contactpos());
             break;
         }
     case GameMsgID_t::GAME_MSG_CHANGE_WORLD_RESPONSE:

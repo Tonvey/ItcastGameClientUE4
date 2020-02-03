@@ -39,6 +39,14 @@ public:\
 public:\
     DECLARE_EVENT_ThreeParams(owner_type,ev_name,t1,t2,t3)\
     DECLARE_EVENT_MEMBER_INSTANCE(ev_name)
+#define DECLARE_MY_EVENT_MEMBER_FourParams(owner_type,ev_name,t1,t2,t3,t4) \
+public:\
+    DECLARE_EVENT_FourParams(owner_type,ev_name,t1,t2,t3,t4)\
+    DECLARE_EVENT_MEMBER_INSTANCE(ev_name)
+#define DECLARE_MY_EVENT_MEMBER_FiveParams(owner_type,ev_name,t1,t2,t3,t4,t5) \
+public:\
+    DECLARE_EVENT_FiveParams(owner_type,ev_name,t1,t2,t3,t4,t5)\
+    DECLARE_EVENT_MEMBER_INSTANCE(ev_name)
 
 /**
  *
@@ -61,6 +69,10 @@ public:
 
     //srcid , target world id , res
     DECLARE_MY_EVENT_MEMBER_ThreeParams(UGameEventDispatcher, OnChangeWorld,int,int,int);
+    //src_pid , skill_id , bulletId , playe_trigger_pos , velocity
+    DECLARE_MY_EVENT_MEMBER_FiveParams(UGameEventDispatcher, OnSkillTrigger,int,int,int,const pb::Position&,const pb::Velocity&);
+    //src_pid , target_pid ,skillId, bulletId , contact_pos
+    DECLARE_MY_EVENT_MEMBER_FiveParams(UGameEventDispatcher, OnSkillContact,int,int,int,int,const pb::Position&);
 public:
     //DECLARE_DELEGATE_OneParam(SingleGameMsgDelegate,GameMsg_t*);
     //typedef TArray<TArray<SingleGameMsgDelegate>> GameMsgMap_t;

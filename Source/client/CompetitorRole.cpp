@@ -20,6 +20,7 @@ void ACompetitorRole::Init()
 {
     UGameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &ACompetitorRole::SetPlayerGroundLocation);
     UGameEventDispatcher::GetInstance().GetOnPlayerLogoff().AddUObject(this,&ACompetitorRole::OnLogoff);
+    UGameEventDispatcher::GetInstance().GetOnSkillTrigger().AddUObject(this, &ACompetitorRole::OnSkillTrigger);
 }
 
 
@@ -59,5 +60,16 @@ void ACompetitorRole::OnLogoff(int _pid)
     Destroy(this);
     mOnLogoff.Broadcast(this->mPid);
     mOnLogoff.Clear();
+}
+
+void ACompetitorRole::OnSkillTrigger(int pid, int skillId, int bulletId,const pb::Position &_triggerPos,const pb::Velocity &_bulletVelocity)
+{
+    if (pid != this->GetPid())
+    {
+        return;
+    }
+    auto skillTriggerPos = DataAdapter::PostionSC(_triggerPos);
+    auto bulletVelocity = DataAdapter::VelocitySC(_bulletVelocity);
+    this->ReceiveSkillTrigger(skillId, bulletId, skillTriggerPos,bulletVelocity);
 }
 

@@ -35,6 +35,7 @@ void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void APlayerBase::Init()
 {
+    UGameEventDispatcher::GetInstance().GetOnSkillContact().AddUObject(this, &APlayerBase::OnSkillContact);
 }
 
 void APlayerBase::SetPid(int _pid)
@@ -112,3 +113,12 @@ FGameMsgPack APlayerBase::GetPositionPack() const
     auto pos = new pb::Position(GetPosition());
     return { pos };
 }
+void APlayerBase::OnSkillContact(int srcPid, int targetPid, int skillId, int bulletId,const pb::Position &_contactPos)
+{
+    if (targetPid != this->GetPid())
+        return;
+    auto contactPos = DataAdapter::PostionSC(_contactPos);
+    this->ReceiveSkillContact(srcPid, skillId, bulletId, contactPos);
+    this->SetHP(_contactPos.bloodvalue());
+}
+

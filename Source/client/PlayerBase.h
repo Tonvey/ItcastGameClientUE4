@@ -70,6 +70,10 @@ public:
     virtual pb::Position GetPosition()const;
     UFUNCTION(BlueprintCallable)
     virtual FGameMsgPack GetPositionPack()const;
+    
+	void OnSkillContact(int srcPid,int targetPid, int skillId, int bulletId,const pb::Position &contactPos);
+	UFUNCTION(BlueprintImplementableEvent, Category = "Cpp_Event")
+	void ReceiveSkillContact(int srcPid , int skillId , int bulletId ,const FVector contactPos);
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int mPid = 0;

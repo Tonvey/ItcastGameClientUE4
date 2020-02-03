@@ -19,6 +19,9 @@ public:
 	ACompetitorRole();
 	~ACompetitorRole();
 	void OnLogoff(int _pid);
+	void OnSkillTrigger(int pid,int skillId,int bulletId,const pb::Position &triggerPos,const pb::Velocity &bulletVelocity);
+	UFUNCTION(BlueprintImplementableEvent, Category = "Cpp_Event")
+	void ReceiveSkillTrigger(int skillId , int bulletId ,const FVector skillPos, const FVector &bulletVelocity);
     virtual void Init()override;
     virtual void SetPlayerGroundLocation(int _pid,pb::Position _pos) override;
     virtual void SetPlayerGroundLocation(const FVector &_pos)override;

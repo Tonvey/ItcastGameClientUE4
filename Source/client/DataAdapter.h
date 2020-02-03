@@ -11,8 +11,10 @@
 class CLIENT_API DataAdapter
 {
 public:
-	static pb::Position PostionCS(FVector _pos);
-	static FVector PostionSC(pb::Position _pos);
+	static pb::Position PostionCS(const FVector &_pos);
+	static FVector PostionSC(const pb::Position &_pos);
+	static FVector VelocitySC(const pb::Velocity &_vel);
+	static pb::Velocity VelocityCS(const FVector &_pos);
 private:
 	DataAdapter();
 	~DataAdapter();
