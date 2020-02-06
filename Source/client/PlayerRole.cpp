@@ -19,6 +19,7 @@ void APlayerRole::Init()
     //FScriptDelegate d;
     //d.BindUFunction(this, "SetPid");
     //UGameEventDispatcher::GetInstance().GetOnSyncPid().Add(d);
+    Super::Init();
     UGameEventDispatcher::GetInstance().GetOnSyncPid().AddUObject(this,&APlayerRole::SetPid);
     UGameEventDispatcher::GetInstance().GetOnSyncPlayerName().AddUObject(this,&APlayerRole::SetPlayerName);
     UGameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &APlayerRole::SetPlayerGroundLocation);
