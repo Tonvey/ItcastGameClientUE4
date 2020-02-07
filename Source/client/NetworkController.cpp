@@ -21,6 +21,8 @@ UNetworkController::~UNetworkController()
 }
 void UNetworkController::Init(FString ip , uint16 port)
 {
+    if (isOffline)
+        return;
     if (!mConnector.IsValid())
     {
 		mConnector = decltype(mConnector)(new NetworkConnector(ip, port));
@@ -43,6 +45,8 @@ void UNetworkController::Reset()
 }
 void UNetworkController::ProcessNetworkMessage()
 {
+    if (isOffline)
+        return;
     if (mLastMessages.size()==0)
     {
 		mLastMessages = mProtocol->ResolveMessage();
@@ -65,11 +69,15 @@ void UNetworkController::ProcessNetworkMessage()
 
 void UNetworkController::PushMsg(GameMsgArray_t &msg)
 {
+    if (isOffline)
+        return;
     mProtocol->PushMsg(msg);
 }
 
 void UNetworkController::PushMsg(const FGameSingleTLV& msg)
 {
+    if (isOffline)
+        return;
     mProtocol->PushMsg(msg);
 }
 

@@ -57,6 +57,7 @@ class CLIENT_API UGameEventDispatcher : public UObject
 	GENERATED_BODY()
 public:
     static UGameEventDispatcher &GetInstance();
+    DECLARE_MY_EVENT_MEMBER_OneParam(UGameEventDispatcher,OnSyncMainPlayer,APlayerRole*);
     DECLARE_MY_EVENT_MEMBER_OneParam(UGameEventDispatcher,OnSyncPid,int);
     DECLARE_MY_EVENT_MEMBER_OneParam(UGameEventDispatcher,OnSyncPlayerName,std::string);
     DECLARE_MY_EVENT_MEMBER_OneParam(UGameEventDispatcher,OnPlayerLogoff,int);

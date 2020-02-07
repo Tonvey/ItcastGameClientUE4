@@ -29,6 +29,7 @@ public:
     virtual void Tick(float deltaTime) override;
     virtual void OnNewPlayer(int _pid, std::string _name,pb::Position _pos);
     virtual void OnSyncMainPlayerId(APlayerRole* mainPlayer, int _pid);
+    virtual void OnSyncMainPlayer(APlayerRole* mainPlayer);
     virtual void OnChangeWorld(int _srcId, int _targetId, int _res);
     virtual void OnPlayerLogoff(int _pid);
     virtual void RegisterPlayer(int _pid ,APlayerBase *_player);
@@ -52,6 +53,12 @@ public:
 
     UPROPERTY(BlueprintReadOnly)
     TArray<FName> levelNameArray;
+
+    UFUNCTION(BlueprintCallable)
+    void SetIsOffline(bool val=true);
+    UFUNCTION(BlueprintCallable)
+    bool GetIsOffline()const;
+
 protected:
     TMap<int, APlayerBase*> mPlayerMap;
     static AclientGameModeBase* smCurrentMode;

@@ -11,6 +11,7 @@
 #include "ConstructorHelpers.h"
 #include "NetworkMessageFactoryUtil.h"
 #include "Engine.h"
+#include "MyGameInstance.h"
 AclientGameModeBase* AclientGameModeBase::smCurrentMode=nullptr;
 AclientGameModeBase::AclientGameModeBase()
     :isChangingLevel(false)
@@ -78,7 +79,7 @@ void AclientGameModeBase::PreChangeLevel()
 void AclientGameModeBase::Tick(float deltaTime)
 {
     Super::Tick(deltaTime);
-    UNetworkController::GetInstance()->ProcessNetworkMessage();
+	UNetworkController::GetInstance()->ProcessNetworkMessage();
 }
 
 void AclientGameModeBase::OnNewPlayer(int _pid, std::string _name,pb::Position _pos)
@@ -116,6 +117,10 @@ void AclientGameModeBase::OnSyncMainPlayerId(APlayerRole *mainPlayer , int _pid)
         this->mMainPlayer = mainPlayer;
         this->RegisterPlayer(_pid, mainPlayer);
     }
+}
+void AclientGameModeBase::OnSyncMainPlayer(APlayerRole* mainPlayer)
+{
+    this->mMainPlayer = mainPlayer;
 }
 void AclientGameModeBase::OnChangeWorld(int _srcId, int _targetId, int _res)
 {
@@ -157,12 +162,13 @@ void AclientGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::BeginPlay()"));
-    UNetworkController::GetInstance()->Init(TEXT("127.0.0.1"),8899);
-    UNetworkController::GetInstance()->ResumeProcessMessage();
+	UNetworkController::GetInstance()->Init(TEXT("127.0.0.1"), 8899);
+	UNetworkController::GetInstance()->ResumeProcessMessage();
     UGameEventDispatcher::GetInstance().Init();
     UGameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
     UGameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
     UGameEventDispatcher::GetInstance().GetOnChangeWorld().AddUObject(this, &AclientGameModeBase::OnChangeWorld);
+    UGameEventDispatcher::GetInstance().GetOnSyncMainPlayer().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayer);
 }
 
 void AclientGameModeBase::Reset()
@@ -186,5 +192,15 @@ void AclientGameModeBase::RequestChangeWorld(int _pid, int _target)
 {
     auto msg = UNetworkMessageFactoryUtil::MakeChangeWorldRequest(_pid, this->mWorldId, _target);
     UNetworkController::GetInstance()->PushMsg(msg);
+}
+
+void AclientGameModeBase::SetIsOffline(bool val)
+{
+    UNetworkController::GetInstance()->isOffline=val;
+}
+
+bool AclientGameModeBase::GetIsOffline() const
+{
+    return UNetworkController::GetInstance()->isOffline;
 }
 

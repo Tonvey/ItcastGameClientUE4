@@ -31,6 +31,9 @@ public:
     bool IsPaused()const { return isPaused; };
     DECLARE_EVENT_TwoParams(UNetworkController, NewGameMessage,GameMsgID_t,::google::protobuf::Message*);
     virtual NewGameMessage &GetOnNewMessage(){return OnNewGameMessage;};
+
+    UPROPERTY(BlueprintReadWrite)
+    bool isOffline;
 private:
     TSharedPtr<NetworkConnector> mConnector;
     TSharedPtr<NetProtocolResolver> mProtocol;

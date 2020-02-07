@@ -23,6 +23,7 @@ void APlayerRole::Init()
     UGameEventDispatcher::GetInstance().GetOnSyncPid().AddUObject(this,&APlayerRole::SetPid);
     UGameEventDispatcher::GetInstance().GetOnSyncPlayerName().AddUObject(this,&APlayerRole::SetPlayerName);
     UGameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &APlayerRole::SetPlayerGroundLocation);
+    UGameEventDispatcher::GetInstance().GetOnSyncMainPlayer().Broadcast(this);
 }
 
 APlayerRole::~APlayerRole()
