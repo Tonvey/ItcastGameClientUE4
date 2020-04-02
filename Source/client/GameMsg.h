@@ -2,7 +2,7 @@
 
 #pragma once
 
-//TODO COreMinimal 不包括list
+//TODO CoreMinimal 不包括list
 #include "CoreMinimal.h"
 //#include "Core.h"
 #include "proto/msg.pb.h"
