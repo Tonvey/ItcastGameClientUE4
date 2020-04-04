@@ -15,6 +15,7 @@ class CLIENT_API UGameSingletonManager : public UObject
 {
 	GENERATED_BODY()
 public:
+    UFUNCTION(BlueprintCallable)
 	static UGameSingletonManager *GetInstance();
 	UGameSingletonManager();
 	~UGameSingletonManager();
@@ -37,6 +38,10 @@ public:
 		}
 		return gameEventDispatcher;
 	}
+    UPROPERTY( EditAnywhere, BlueprintReadWrite )
+    FString ServerIP = "127.0.0.1";
+    UPROPERTY( EditAnywhere, BlueprintReadWrite )
+    int32 ServerPort = 8899;
 private:
 	UPROPERTY()
 	UNetworkController *networkController;

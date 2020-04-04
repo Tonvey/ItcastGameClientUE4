@@ -10,6 +10,7 @@
 #include "GameFramework/Actor.h"
 #include "ConstructorHelpers.h"
 #include "NetworkMessageFactoryUtil.h"
+#include "GameSingletonManager.h"
 #include "Engine.h"
 AclientGameModeBase* AclientGameModeBase::smCurrentMode=nullptr;
 AclientGameModeBase::AclientGameModeBase()
@@ -157,7 +158,9 @@ void AclientGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::BeginPlay()"));
-    UNetworkController::GetInstance()->Init(TEXT("127.0.0.1"),8899);
+    UNetworkController::GetInstance()->Init(
+                                            UGameSingletonManager::GetInstance()->ServerIP,
+                                            UGameSingletonManager::GetInstance()->ServerPort);
     UNetworkController::GetInstance()->ResumeProcessMessage();
     UGameEventDispatcher::GetInstance().Init();
     UGameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
