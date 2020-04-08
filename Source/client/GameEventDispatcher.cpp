@@ -5,10 +5,10 @@
 #include "GameSingletonManager.h"
 using namespace std;
 
-UGameEventDispatcher &UGameEventDispatcher::GetInstance()
+UGameEventDispatcher *UGameEventDispatcher::GetInstance()
 {
     auto ret = UGameSingletonManager::GetInstance()->GetGameEventDispatcher();
-    return *ret;
+    return ret;
 }
 UGameEventDispatcher::UGameEventDispatcher()
 {
@@ -18,10 +18,6 @@ UGameEventDispatcher::UGameEventDispatcher()
 UGameEventDispatcher::~UGameEventDispatcher()
 {
     UE_LOG(LogTemp, Display, TEXT("UGameEventDispatcher::~UGameEventDispatcher"));
-    if (handle.IsValid())
-    {
-        UNetworkController::GetInstance()->GetOnNewMessage().Remove(handle);
-    }
 }
 
 void UGameEventDispatcher::Init()

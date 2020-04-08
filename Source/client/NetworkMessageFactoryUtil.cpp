@@ -25,7 +25,7 @@ UNetworkController *UNetworkMessageFactoryUtil::GetNetworkControllerInstance()
 }
 UGameEventDispatcher* UNetworkMessageFactoryUtil::GetGameEventDispatcher()
 {
-    return &UGameEventDispatcher::GetInstance();
+    return UGameEventDispatcher::GetInstance();
 }
 FGameSingleTLV UNetworkMessageFactoryUtil::MakeTalkContent(const FText &_content)
 {

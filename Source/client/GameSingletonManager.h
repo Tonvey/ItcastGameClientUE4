@@ -23,18 +23,26 @@ public:
     UFUNCTION(BlueprintCallable)
 	UNetworkController *GetNetworkController()
 	{
-		if (networkController == nullptr)
+		//if (networkController == nullptr)
+		//{
+		//	networkController = NewObject<UNetworkController>();
+		//}
+		if (networkController->IsPendingKill())
 		{
-			networkController = NewObject<UNetworkController>();
+			return nullptr;
 		}
 		return networkController;
 	}
     UFUNCTION(BlueprintCallable)
 	UGameEventDispatcher *GetGameEventDispatcher()
 	{
-		if (gameEventDispatcher == nullptr)
+		//if (gameEventDispatcher == nullptr)
+		//{
+		//	gameEventDispatcher = NewObject<UGameEventDispatcher>();
+		//}
+		if (gameEventDispatcher->IsPendingKill())
 		{
-			gameEventDispatcher = NewObject<UGameEventDispatcher>();
+			return nullptr;
 		}
 		return gameEventDispatcher;
 	}

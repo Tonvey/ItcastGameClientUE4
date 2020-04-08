@@ -32,12 +32,6 @@ AclientGameModeBase::AclientGameModeBase()
 AclientGameModeBase::~AclientGameModeBase()
 {
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::~AclientGameModeBase"));
-    if (!isChangingLevel)
-    {
-        UNetworkController::GetInstance()->Reset();
-    }
-    UGameEventDispatcher::GetInstance().Reset();
-    mPlayerMap.Reset();
 }
 ACompetitorRole* AclientGameModeBase::CreateACompetitorToLevel_Implementation(int _pid,
     const FString& _name,
@@ -162,10 +156,10 @@ void AclientGameModeBase::BeginPlay()
                                             UGameSingletonManager::GetInstance()->ServerIP,
                                             UGameSingletonManager::GetInstance()->ServerPort);
     UNetworkController::GetInstance()->ResumeProcessMessage();
-    UGameEventDispatcher::GetInstance().Init();
-    UGameEventDispatcher::GetInstance().GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
-    UGameEventDispatcher::GetInstance().GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
-    UGameEventDispatcher::GetInstance().GetOnChangeWorld().AddUObject(this, &AclientGameModeBase::OnChangeWorld);
+    UGameEventDispatcher::GetInstance()->Init();
+    UGameEventDispatcher::GetInstance()->GetOnNewPlayer().AddUObject(this, &AclientGameModeBase::OnNewPlayer);
+    UGameEventDispatcher::GetInstance()->GetOnMainPlayerSync().AddUObject(this, &AclientGameModeBase::OnSyncMainPlayerId);
+    UGameEventDispatcher::GetInstance()->GetOnChangeWorld().AddUObject(this, &AclientGameModeBase::OnChangeWorld);
 }
 
 void AclientGameModeBase::Reset()
@@ -179,9 +173,15 @@ void AclientGameModeBase::BeginDestroy()
     UE_LOG(LogTemp, Display, TEXT("AclientGameModeBase::BeginDestroy") );
     if (!isChangingLevel)
     {
-		UNetworkController::GetInstance()->Finish();
+        if (UNetworkController::GetInstance())
+        {
+			UNetworkController::GetInstance()->Finish();
+        }
     }
-    UGameEventDispatcher::GetInstance().Reset();
+    if (UGameEventDispatcher::GetInstance())
+    {
+		UGameEventDispatcher::GetInstance()->Reset();
+    }
     mPlayerMap.Reset();
 }
 

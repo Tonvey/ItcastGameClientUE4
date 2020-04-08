@@ -35,7 +35,7 @@ void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void APlayerBase::Init()
 {
-    UGameEventDispatcher::GetInstance().GetOnSkillContact().AddUObject(this, &APlayerBase::OnSkillContact);
+    UGameEventDispatcher::GetInstance()->GetOnSkillContact().AddUObject(this, &APlayerBase::OnSkillContact);
 }
 
 void APlayerBase::SetPid(int _pid)

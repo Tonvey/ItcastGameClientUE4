@@ -16,6 +16,8 @@ UGameSingletonManager *UGameSingletonManager::GetInstance()
 UGameSingletonManager::UGameSingletonManager()
 {
     UE_LOG(LogTemp, Display, TEXT("UGameSingletonManager::UGameSingletonManager()"));
+	networkController = NewObject<UNetworkController>();
+	gameEventDispatcher = NewObject<UGameEventDispatcher>();
 }
 
 UGameSingletonManager::~UGameSingletonManager()

@@ -19,9 +19,9 @@ ACompetitorRole::ACompetitorRole()
 void ACompetitorRole::Init()
 {
     Super::Init();
-    UGameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &ACompetitorRole::SetPlayerGroundLocation);
-    UGameEventDispatcher::GetInstance().GetOnPlayerLogoff().AddUObject(this,&ACompetitorRole::OnLogoff);
-    UGameEventDispatcher::GetInstance().GetOnSkillTrigger().AddUObject(this, &ACompetitorRole::OnSkillTrigger);
+    UGameEventDispatcher::GetInstance()->GetOnSyncPosition().AddUObject(this, &ACompetitorRole::SetPlayerGroundLocation);
+    UGameEventDispatcher::GetInstance()->GetOnPlayerLogoff().AddUObject(this,&ACompetitorRole::OnLogoff);
+    UGameEventDispatcher::GetInstance()->GetOnSkillTrigger().AddUObject(this, &ACompetitorRole::OnSkillTrigger);
 }
 
 

@@ -20,9 +20,9 @@ void APlayerRole::Init()
     //d.BindUFunction(this, "SetPid");
     //UGameEventDispatcher::GetInstance().GetOnSyncPid().Add(d);
     Super::Init();
-    UGameEventDispatcher::GetInstance().GetOnSyncPid().AddUObject(this,&APlayerRole::SetPid);
-    UGameEventDispatcher::GetInstance().GetOnSyncPlayerName().AddUObject(this,&APlayerRole::SetPlayerName);
-    UGameEventDispatcher::GetInstance().GetOnSyncPosition().AddUObject(this, &APlayerRole::SetPlayerGroundLocation);
+    UGameEventDispatcher::GetInstance()->GetOnSyncPid().AddUObject(this,&APlayerRole::SetPid);
+    UGameEventDispatcher::GetInstance()->GetOnSyncPlayerName().AddUObject(this,&APlayerRole::SetPlayerName);
+    UGameEventDispatcher::GetInstance()->GetOnSyncPosition().AddUObject(this, &APlayerRole::SetPlayerGroundLocation);
 }
 
 APlayerRole::~APlayerRole()
@@ -32,7 +32,7 @@ APlayerRole::~APlayerRole()
 void APlayerRole::SetPid(int _pid)
 {
     Super::SetPid(_pid);
-    UGameEventDispatcher::GetInstance().GetOnMainPlayerSync().Broadcast(this, _pid);
+    UGameEventDispatcher::GetInstance()->GetOnMainPlayerSync().Broadcast(this, _pid);
 }
 
 void APlayerRole::Tick(float DeltaTime)

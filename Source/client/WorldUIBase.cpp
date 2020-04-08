@@ -18,7 +18,7 @@ bool UWorldUIBase::Initialize()
 	if (ret)
 	{
 		//int,std::string,std::string
-		mHandler = UGameEventDispatcher::GetInstance().GetOnSyncChat().AddLambda
+		mHandler = UGameEventDispatcher::GetInstance()->GetOnSyncChat().AddLambda
 		(
 			[this](int _pid, std::string _name, std::string _content)
 			{
@@ -36,6 +36,6 @@ void UWorldUIBase::BeginDestroy()
 	Super::BeginDestroy();
 	if (mHandler.IsValid())
 	{
-		UGameEventDispatcher::GetInstance().GetOnSyncChat().Remove(mHandler);
+		UGameEventDispatcher::GetInstance()->GetOnSyncChat().Remove(mHandler);
 	}
 }
